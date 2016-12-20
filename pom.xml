@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>task11</groupId>
-  <artifactId>task11-pages</artifactId>
+  <artifactId>university</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>task11 Pages Webapp</name>
@@ -46,7 +46,7 @@
       </dependency>
   </dependencies>
   <build>
-    <finalName>task11-pages</finalName>
+    <finalName>university</finalName>
     <plugins>
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -65,7 +65,7 @@
                 <url>http://localhost:8080/</url>
                 <username>tomcat</username>
                 <password>tomcat</password>
-                <path>/univer</path>
+                <path>/university</path>
             </configuration>
         </plugin>
         <plugin>
