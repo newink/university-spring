@@ -98,7 +98,7 @@ public class Discipline implements Identified {
     }
 
     public enum TestType {
-        TEST, EXAM, ESSAY;
+        TEST, EXAM, ESSAY
     }
 
     @Override

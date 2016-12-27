@@ -1,9 +1,8 @@
 package com.smarterama.university.servlets;
 
-import com.smarterama.university.domain.Room;
+import com.smarterama.university.domain.Discipline;
+import com.smarterama.university.domain.Group;
 import com.smarterama.university.exceptions.PersistenceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,28 +12,28 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(value = "/rooms")
-public class RoomServlet extends HttpServlet {
-    private Room serviceRoom;
+@WebServlet(value = "/groups")
+public class GroupServlet extends HttpServlet {
+    private Group serviceGroup;
 
     @Override
     public void init() throws ServletException {
         super.init();
-        serviceRoom = new Room();
+        serviceGroup = new Group();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Room> roomList = null;
+        List<Group> groupList = null;
         String message = "";
 
         try {
-            roomList = serviceRoom.getAll();
+            groupList = serviceGroup.getAll();
         } catch (PersistenceException e) {
             message = "Error: " + e.getMessage();
         }
-        request.getSession().setAttribute("rooms", roomList);
+        request.getSession().setAttribute("groups", groupList);
         request.getSession().setAttribute("error", message);
-        getServletContext().getRequestDispatcher("/WEB-INF/views/rooms.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/WEB-INF/views/groups.jsp").forward(request, response);
     }
 }

@@ -73,6 +73,7 @@ public class StudentDAO extends AbstractJDBCDao<Student> {
                 student.setLastName(resultSet.getString("last_name"));
                 student.setGroup(group);
                 student.setId(resultSet.getInt("id"));
+                student.setCourse(resultSet.getInt("course"));
                 student.setAddress(resultSet.getString("address"));
                 student.setSubsidized(resultSet.getBoolean("subsidized"));
                 studentsList.add(student);

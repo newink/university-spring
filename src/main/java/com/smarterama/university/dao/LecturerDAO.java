@@ -160,8 +160,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
                 "ON lecturers_disciplines.discipline_id = disciplines.id " +
                 "WHERE lecturers_disciplines.lecturer_id = ?;";
         try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query);
-              PreparedStatement disciplinesStatement = connection.prepareStatement(disciplinesQuery);)  {
+              PreparedStatement statement  = connection.prepareStatement(query))  {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Lecturer addedLecturer = new Lecturer();
@@ -172,6 +171,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
                 addedLecturer.setLastName(resultSet.getString("last_name"));
 
 
+                PreparedStatement disciplinesStatement = connection.prepareStatement(disciplinesQuery);
                 disciplinesStatement.setInt(1, addedLecturer.getId());
                 ResultSet disciplinesResultSet = disciplinesStatement.executeQuery();
                 while (disciplinesResultSet.next()) {

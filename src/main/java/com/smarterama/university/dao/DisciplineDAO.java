@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DisciplineDAO extends AbstractJDBCDao<Discipline> {
+public class    DisciplineDAO extends AbstractJDBCDao<Discipline> {
 
     private static Logger logger = LoggerFactory.getLogger(DisciplineDAO.class);
 
