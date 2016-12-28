@@ -22,7 +22,7 @@ public class StudentDAO extends AbstractJDBCDao<Student> {
 
     @Override
     protected String getUpdateQuery() {
-        return "UPDATE students SET first_name = ?, last_name = ?, course = ?, address = ?, subsidized = ?, group_id = ?";
+        return "UPDATE students SET first_name = ?, last_name = ?, course = ?, address = ?, subsidized = ?, group_id = ? WHERE id = ?";
     }
 
     @Override
@@ -42,6 +42,17 @@ public class StudentDAO extends AbstractJDBCDao<Student> {
 
     @Override
     protected void prepareUpdateStatement(PreparedStatement statement, Student student) throws PersistenceException {
+        prepareInsertStatement(statement, student);
+        try {
+            statement.setInt(7, student.getId());
+        } catch (SQLException e) {
+            logger.error("Error preparing student update/insert statement", e);
+            throw new PersistenceException("Error preparing student update statement", e);
+        }
+    }
+
+    @Override
+    protected void prepareInsertStatement(PreparedStatement statement, Student student) throws PersistenceException {
         try {
             statement.setString(1, student.getFirstName());
             statement.setString(2, student.getLastName());
@@ -53,11 +64,6 @@ public class StudentDAO extends AbstractJDBCDao<Student> {
             logger.error("Error preparing student update/insert statement", e);
             throw new PersistenceException("Error preparing student update statement", e);
         }
-    }
-
-    @Override
-    protected void prepareInsertStatement(PreparedStatement statement, Student student) throws PersistenceException {
-        prepareUpdateStatement(statement, student);
     }
 
     @Override

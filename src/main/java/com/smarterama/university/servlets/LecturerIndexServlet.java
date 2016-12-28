@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet(value = "/lecturers")
-public class LecturerServlet extends HttpServlet {
+public class LecturerIndexServlet extends HttpServlet {
     private Lecturer serviceLecturer;
 
     @Override
@@ -34,6 +34,6 @@ public class LecturerServlet extends HttpServlet {
         }
         request.getSession().setAttribute("lecturers", lecturerList);
         request.getSession().setAttribute("error", message);
-        getServletContext().getRequestDispatcher("/WEB-INF/views/lecturers.jsp").forward(request, response);
+        getServletContext().getRequestDispatcher("/WEB-INF/views/indexes/lecturers.jsp").forward(request, response);
     }
 }
