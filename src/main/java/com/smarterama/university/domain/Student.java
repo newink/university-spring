@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Student implements Identified {
@@ -29,6 +30,14 @@ public class Student implements Identified {
         this.address = address;
         this.course = course;
         this.isSubsidized = isSubsidized;
+    }
+
+    public Student(Map<String, String[]> parameterMap) {
+        this.firstName = parameterMap.get("first_name")[0];
+        this.lastName = parameterMap.get("last_name")[0];
+        this.address = parameterMap.get("address")[0];
+        this.course = Integer.parseInt(parameterMap.get("course")[0]);
+        this.isSubsidized = "on".equals(parameterMap.get("first_name")[0]);
     }
 
     @Override

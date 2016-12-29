@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Discipline implements Identified {
@@ -23,6 +24,11 @@ public class Discipline implements Identified {
     }
 
     public Discipline() {
+    }
+
+    public Discipline(Map<String, String[]> parameterMap) {
+        this.name = parameterMap.get("name")[0];
+        this.finalExamType = TestType.valueOf(parameterMap.get("test_type")[0]);
     }
 
     @Override

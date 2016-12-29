@@ -14,13 +14,6 @@ import java.util.List;
 
 @WebServlet(value = "/disciplines")
 public class DisciplineIndexServlet extends HttpServlet {
-    private Discipline serviceDiscipline;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        serviceDiscipline = new Discipline();
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -28,7 +21,7 @@ public class DisciplineIndexServlet extends HttpServlet {
         String message = "";
 
         try {
-            disciplineList = serviceDiscipline.getAll();
+            disciplineList = new Discipline().getAll();
         } catch (PersistenceException e) {
             message = "Error: " + e.getMessage();
         }

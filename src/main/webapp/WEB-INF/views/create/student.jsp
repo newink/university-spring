@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../partials/_header.jsp" />
+<jsp:include page="../partials/header.jsp" />
 <body>
 <div class="container">
     <div class="col-md-5">
@@ -9,7 +9,9 @@
             <p class="bg-warning"><c:out value="${error}"/><p>
         </c:if>
         <form action="/university/student" method="post">
-            <input type="hidden" name="action" value="create">
+            <c:if test="${not empty id}">
+                <input type="hidden" name="id" value="${id}">
+            </c:if>
             <fieldset class="form-group">
                 <label for="first_name">First Name</label>
                 <input required type="text" class="form-control" id="first_name" name="first_name">

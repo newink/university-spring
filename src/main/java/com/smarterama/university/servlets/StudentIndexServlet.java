@@ -15,13 +15,6 @@ import java.util.List;
 
 @WebServlet(value = "/students")
 public class StudentIndexServlet extends HttpServlet {
-    private Student serviceStudent;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        serviceStudent = new Student();
-    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -29,7 +22,7 @@ public class StudentIndexServlet extends HttpServlet {
         String message = "";
 
         try {
-            studentList = serviceStudent.getAll();
+            studentList = new Student().getAll();
         } catch (PersistenceException e) {
             message = "Error " + e.getMessage();
         }

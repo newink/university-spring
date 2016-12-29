@@ -14,21 +14,13 @@ import java.util.List;
 
 @WebServlet(value = "/groups")
 public class GroupIndexServlet extends HttpServlet {
-    private Group serviceGroup;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        serviceGroup = new Group();
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Group> groupList = null;
         String message = "";
 
         try {
-            groupList = serviceGroup.getAll();
+            groupList = new Group().getAll();
         } catch (PersistenceException e) {
             message = "Error: " + e.getMessage();
         }

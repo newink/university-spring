@@ -14,21 +14,13 @@ import java.util.List;
 
 @WebServlet(value = "/lecturers")
 public class LecturerIndexServlet extends HttpServlet {
-    private Lecturer serviceLecturer;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        serviceLecturer = new Lecturer();
-    }
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Lecturer> lecturerList = null;
         String message = "";
 
         try {
-            lecturerList = serviceLecturer.getAll();
+            lecturerList = new Lecturer().getAll();
         } catch (PersistenceException e) {
             message = "Error: " + e.getMessage();
         }

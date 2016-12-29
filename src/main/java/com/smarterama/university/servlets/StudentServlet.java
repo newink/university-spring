@@ -13,79 +13,49 @@ import java.io.IOException;
 
 @WebServlet(value = "/student")
 public class StudentServlet extends HttpServlet {
-    private Student serviceStudent;
+    private static final String INSERT_UPDATE_JSP = "/WEB-INF/views/create/student.jsp";
+    private static final String INDEX_JSP = "/WEB-INF/views/indexes/student.jsp";
+    private static final String REDIRECT_ADDRESS = "/university/students";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
-        try {
-            switch (action) {
-                case "delete": {
-                    int id = Integer.parseInt(request.getParameter("id"));
-                    serviceStudent.setId(id);
-                    serviceStudent.delete();
-                    response.sendRedirect("/university/students");
-                    break;
-                }
-                case "update": {
-                    int id = Integer.parseInt(request.getParameter("id"));
-                    serviceStudent.setId(id);
-                    serviceStudent.retrieve();
-                    request.getSession().setAttribute("id", id);
-                    request.getSession().setAttribute("updatedStudent", serviceStudent);
-                    getServletContext().getRequestDispatcher("/WEB-INF/views/update/student.jsp").forward(request, response);
-                    break;
-                }
-                default: {
-                    getServletContext().getRequestDispatcher("/WEB-INF/views/create/student.jsp").forward(request, response);
-                }
-            }
-        } catch (PersistenceException e) {
-            String error = "Error: " + e.getMessage();
-            request.getSession().setAttribute("error", error);
-            getServletContext().getRequestDispatcher("/WEB-INF/views/indexes/student.jsp").forward(request, response);
+        if (action.equalsIgnoreCase("update")) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            request.setAttribute("id", id);
         }
+        getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-        String firstName = request.getParameter("first_name");
-        String lastName = request.getParameter("last_name");
-        String address = request.getParameter("address");
-        int course = Integer.parseInt(request.getParameter("course"));
-        int groupId = Integer.parseInt(request.getParameter("group_id"));
-        boolean subsidized = "on".equals(request.getParameter("subsidized"));
-
+        int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : -1;
         try {
-            Student student = new Student(firstName, lastName, address, course, subsidized);
-            Group group = new Group();
-            group.setId(groupId);
+            if (request.getParameter("first_name") != null) {
+                Student student = new Student(request.getParameterMap());
+                Group group = new Group();
+                group.setId(Integer.parseInt(request.getParameter("group_id")));
+                group.retrieve();
+                student.setGroup(group);
 
-            student.setGroup(group.retrieve());
-            switch (action) {
-                case "create": {
-                    student.persist();
-                    break;
-                }
-                case "update": {
-                    int id = Integer.parseInt(request.getParameter("id"));
+                if (id != -1) {
                     student.setId(id);
                     student.update();
-                    break;
+                } else {
+                    student.persist();
                 }
+
+            } else {
+                Student student = new Student();
+                student.setId(id);
+                student.delete();
             }
-            response.sendRedirect("/university/students");
+
+            response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();
-            request.getSession().setAttribute("error", error);
-            getServletContext().getRequestDispatcher("/WEB-INF/views/create/student.jsp").forward(request, response);
+            request.setAttribute("error", error);
+            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
         }
-    }
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        serviceStudent = new Student();
     }
 }

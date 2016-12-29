@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../partials/_header.jsp" />
+<jsp:include page="../partials/header.jsp" />
 <body>
 <div class="container">
     <div class="jumbotron">
@@ -35,7 +35,14 @@
                             <td><c:out value="${student.course}" /></td>
                             <td><c:out value="${student.group.groupNumber}" /></td>
                             <td><a href="/university/student?action=update&id=${student.id}"><i class="fa fa-pencil"></i></a></td>
-                            <td><a href="/university/student?action=delete&id=${student.id}"><i class="fa fa-times"></i></a></td>
+                            <td>
+                                <form method="post" action="/university/student" class="inline">
+                                    <input type="hidden" name="id" value="${student.id}">
+                                    <button type="submit" class="link-button">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>

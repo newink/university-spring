@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Lecturer implements Identified {
@@ -25,6 +26,14 @@ public class Lecturer implements Identified {
         this.lastName = lastName;
         this.email = email;
         this.degree = degree;
+        this.disciplines = new ArrayList<>();
+    }
+
+    public Lecturer(Map<String, String[]> parameterMap) {
+        this.firstName = parameterMap.get("first_name")[0];
+        this.lastName = parameterMap.get("last_name")[0];
+        this.email = parameterMap.get("email")[0];
+        this.degree = Degree.valueOf(parameterMap.get("degree")[0]);
         this.disciplines = new ArrayList<>();
     }
 

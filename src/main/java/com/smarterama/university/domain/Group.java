@@ -13,13 +13,16 @@ public class Group implements Identified {
     private GroupDAO groupDAO;
     private int id;
     private int groupNumber;
-    private Set<Student> students;
 
     public Group(int groupNumber) {
         this.groupNumber = groupNumber;
     }
 
     public Group() {
+    }
+
+    public Group(Map<String, String[]> parameterMap) {
+        this.groupNumber = Integer.parseInt(parameterMap.get("group_number")[0]);
     }
 
     public int getId() {
@@ -93,7 +96,6 @@ public class Group implements Identified {
                 "groupDAO=" + groupDAO +
                 ", id=" + id +
                 ", groupNumber=" + groupNumber +
-                ", students=" + students +
                 '}';
     }
 }
