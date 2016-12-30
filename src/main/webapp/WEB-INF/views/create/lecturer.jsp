@@ -5,11 +5,11 @@
 <body>
 <div class="container">
     <div class="col-md-5">
-        <h1>New Student</h1>
+        <h1>New Lecturer</h1>
         <c:if test="${not empty error}">
-            <p class="bg-warning"><c:out value="${error}"/><p>
+        <p class="bg-warning"><c:out value="${error}"/><p>
         </c:if>
-        <form action="/university/student" method="post">
+        <form action="/university/lecturer" method="post">
             <c:if test="${not empty id}">
                 <input type="hidden" name="id" value="${id}">
             </c:if>
@@ -22,20 +22,25 @@
                 <input required type="text" class="form-control" id="last_name" name="last_name">
             </fieldset>
             <fieldset class="form-group">
-                <label for="address">Address</label>
-                <input required type="text" class="form-control" id="address" name="address">
+                <label for="email">Email</label>
+                <input required type="text" class="form-control" id="email" name="email">
             </fieldset>
             <fieldset class="form-group">
-                <label for="course">Course</label>
-                <input required type="number" class="form-control" id="course" name="course">
+                <label for="degree">Degree</label>
+                <select id="degree" name="degree">
+                    <option>Associate</option>
+                    <option>Bachelor</option>
+                    <option>Professional</option>
+                    <option>Master</option>
+                </select>
             </fieldset>
             <fieldset class="form-group">
-                <label for="group_id">Group Id</label>
-                <input required type="number" class="form-control" id="group_id" name="group_id">
-            </fieldset>
-            <fieldset class="form-group">
-                <label for="subsidized">Subsidized</label>
-                <input type="checkbox" class="form-control" id="subsidized" name="subsidized">
+                <label for="disciplines">Disciplines</label>
+                <select id="disciplines" name="disciplines" multiple>
+                    <c:forEach items="${disciplines}" var="discipline">
+                        <option value="${discipline.id}"><c:out value="${discipline.name}" /></option>
+                    </c:forEach>
+                </select>
             </fieldset>
             <button type="submit" class="btn btn-default">Submit</button>
         </form>

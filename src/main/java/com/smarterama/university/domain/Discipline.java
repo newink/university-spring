@@ -28,7 +28,7 @@ public class Discipline implements Identified {
 
     public Discipline(Map<String, String[]> parameterMap) {
         this.name = parameterMap.get("name")[0];
-        this.finalExamType = TestType.valueOf(parameterMap.get("test_type")[0]);
+        this.finalExamType = TestType.valueOf(parameterMap.get("test_type")[0].toUpperCase());
     }
 
     @Override
@@ -53,7 +53,7 @@ public class Discipline implements Identified {
     }
 
     public void setFinalExamType(String finalExamType) {
-        this.finalExamType = TestType.valueOf(finalExamType);
+        this.finalExamType = TestType.valueOf(finalExamType.toUpperCase());
     }
 
     public int persist() throws PersistenceException {

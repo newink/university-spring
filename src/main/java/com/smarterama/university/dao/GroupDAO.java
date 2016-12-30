@@ -22,7 +22,7 @@ public class GroupDAO extends AbstractJDBCDao<Group> {
 
     @Override
     protected String getUpdateQuery() {
-        return "UPDATE groups SET group_number = ?";
+        return "UPDATE groups SET group_number = ? WHERE id = ?;";
     }
 
     @Override
@@ -42,17 +42,23 @@ public class GroupDAO extends AbstractJDBCDao<Group> {
 
     @Override
     protected void prepareUpdateStatement(PreparedStatement statement, Group group) throws PersistenceException {
+        prepareInsertStatement(statement, group);
+        try {
+            statement.setInt(2, group.getId());
+        } catch (SQLException e) {
+            logger.error("Error preparing groups update/insert statement", e);
+            throw new PersistenceException("Error preparing groups insert statement", e);
+        }
+    }
+
+    @Override
+    protected void prepareInsertStatement(PreparedStatement statement, Group group) throws PersistenceException {
         try {
             statement.setInt(1, group.getGroupNumber());
         } catch (SQLException e) {
             logger.error("Error preparing groups update/insert statement", e);
             throw new PersistenceException("Error preparing groups update statement", e);
         }
-    }
-
-    @Override
-    protected void prepareInsertStatement(PreparedStatement statement, Group group) throws PersistenceException {
-        prepareUpdateStatement(statement, group);
     }
 
     @Override

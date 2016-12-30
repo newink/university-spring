@@ -26,7 +26,7 @@ public class LessonTest {
         group.setGroupNumber(12);
 
         Lecturer lecturer = new Lecturer();
-        lecturer.setDegree("PHILOSOPHY_DOCTOR");
+        lecturer.setDegree("BACHELOR");
         lecturer.setEmail("lecturer@email.com");
         lecturer.setFirstName("Richard");
         lecturer.setLastName("Clarkson");

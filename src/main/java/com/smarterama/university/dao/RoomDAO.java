@@ -22,7 +22,7 @@ public class RoomDAO extends AbstractJDBCDao<Room> {
 
     @Override
     protected String getUpdateQuery() {
-        return "UPDATE rooms SET room_number = ?, capacity = ?;";
+        return "UPDATE rooms SET room_number = ?, capacity = ? WHERE id = ?;";
     }
 
     @Override
@@ -42,9 +42,9 @@ public class RoomDAO extends AbstractJDBCDao<Room> {
 
     @Override
     protected void prepareUpdateStatement(PreparedStatement statement, Room room) throws PersistenceException {
+        prepareInsertStatement(statement, room);
         try {
-            statement.setInt(1, room.getRoomNumber());
-            statement.setInt(2, room.getCapacity());
+            statement.setInt(3, room.getId());
         } catch (SQLException e) {
             logger.error("Error preparing rooms update/insert statement", e);
             throw new PersistenceException("Problem preparing rooms update statement", e);
@@ -53,7 +53,13 @@ public class RoomDAO extends AbstractJDBCDao<Room> {
 
     @Override
     protected void prepareInsertStatement(PreparedStatement statement, Room room) throws PersistenceException {
-        prepareUpdateStatement(statement, room);
+        try {
+            statement.setInt(1, room.getRoomNumber());
+            statement.setInt(2, room.getCapacity());
+        } catch (SQLException e) {
+            logger.error("Error preparing rooms update/insert statement", e);
+            throw new PersistenceException("Problem preparing rooms update statement", e);
+        }
     }
 
     @Override

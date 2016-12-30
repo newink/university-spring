@@ -22,7 +22,7 @@ public class    DisciplineDAO extends AbstractJDBCDao<Discipline> {
 
     @Override
     protected String getUpdateQuery() {
-        return "UPDATE disciplines SET name = ?, test_type = ?;";
+        return "UPDATE disciplines SET name = ?, test_type = ? WHERE id = ?;";
     }
 
     @Override
@@ -42,9 +42,9 @@ public class    DisciplineDAO extends AbstractJDBCDao<Discipline> {
 
     @Override
     protected void prepareUpdateStatement(PreparedStatement statement, Discipline object) throws PersistenceException {
+        prepareInsertStatement(statement, object);
         try {
-            statement.setString(1, object.getName());
-            statement.setString(2, object.getFinalExamType().name());
+            statement.setInt(3, object.getId());
         } catch (SQLException e) {
             logger.error("Error preparing discipline update/insert statement", e);
             throw new PersistenceException("Problem preparing update statement", e);
@@ -53,7 +53,13 @@ public class    DisciplineDAO extends AbstractJDBCDao<Discipline> {
 
     @Override
     protected void prepareInsertStatement(PreparedStatement statement, Discipline object) throws PersistenceException {
-        prepareUpdateStatement(statement, object);
+        try {
+            statement.setString(1, object.getName());
+            statement.setString(2, object.getFinalExamType().name());
+        } catch (SQLException e) {
+            logger.error("Error preparing discipline update/insert statement", e);
+            throw new PersistenceException("Problem preparing insert statement", e);
+        }
     }
 
     @Override

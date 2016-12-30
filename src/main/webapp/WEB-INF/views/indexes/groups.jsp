@@ -6,6 +6,7 @@
 <div class="container">
     <div class="jumbotron">
         <h1>Groups Index</h1>
+        <a href="group">Add new group</a>
         <c:choose>
             <c:when test="${not empty error}">
                 <div class="alert-warning">${error}</div>
@@ -16,6 +17,8 @@
                     <tr>
                         <th>Group Id</th>
                         <th>Number</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -23,6 +26,15 @@
                         <tr>
                             <td><c:out value="${group.id}" /></td>
                             <td><c:out value="${group.groupNumber}" /></td>
+                            <td><a href="/university/group?action=update&id=${group.id}"><i class="fa fa-pencil"></i></a></td>
+                            <td>
+                                <form method="post" action="/university/group" class="inline">
+                                    <input type="hidden" name="id" value="${group.id}">
+                                    <button type="submit" class="link-button">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>

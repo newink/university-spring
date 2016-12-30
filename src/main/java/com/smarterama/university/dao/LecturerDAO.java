@@ -6,10 +6,7 @@ import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +21,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
 
     @Override
     protected String getUpdateQuery() {
-        return "UPDATE lecturers SET first_name = ?, last_name = ?, email = ?, degree = ?;";
+        return "UPDATE lecturers SET first_name = ?, last_name = ?, email = ?, degree = ? WHERE id = ?;";
     }
 
     @Override
@@ -50,7 +47,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
                 " VALUES (?, ?);";
         int count;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement  = connection.prepareStatement(query);
+             PreparedStatement statement  = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
              PreparedStatement disciplineStatement = connection.prepareStatement(disciplinesQuery)) {
 
@@ -59,14 +56,20 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
 
             deleteStatement.setInt(1, lecturer.getId());
             deleteStatement.executeUpdate();
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                lecturer.setId(generatedKeys.getInt(1));
+            }
             deleteStatement.close();
 
+            connection.setAutoCommit(false);
             for (Discipline discipline : lecturer.getDisciplines()) {
                 disciplineStatement.setInt(1, lecturer.getId());
                 disciplineStatement.setInt(2, discipline.getId());
                 disciplineStatement.addBatch();
             }
             disciplineStatement.executeBatch();
+            connection.setAutoCommit(true);
             disciplineStatement.close();
         } catch (SQLException e) {
             logger.error("Error creating lecturer record: Cause: {}, Object parameters: {}", e, lecturer);
@@ -87,7 +90,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
              PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
              PreparedStatement disciplineStatement = connection.prepareStatement(disciplinesQuery)) {
 
-            prepareInsertStatement(statement, lecturer);
+            prepareUpdateStatement(statement, lecturer);
             count = statement.executeUpdate();
 
             deleteStatement.setInt(1, lecturer.getId());
@@ -196,6 +199,17 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
 
     @Override
     protected void prepareUpdateStatement(PreparedStatement statement, Lecturer lecturer) throws PersistenceException {
+        prepareInsertStatement(statement, lecturer);
+        try {
+            statement.setInt(5, lecturer.getId());
+        } catch (SQLException e) {
+            logger.error("Error preparing lecturer insert statement", e);
+            throw new PersistenceException("Error preparing lecturer insert statement", e);
+        }
+    }
+
+    @Override
+    protected void prepareInsertStatement(PreparedStatement statement, Lecturer lecturer) throws PersistenceException {
         try {
             statement.setString(1, lecturer.getFirstName());
             statement.setString(2, lecturer.getLastName());
@@ -205,11 +219,6 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
             logger.error("Error preparing lecturer update statement", e);
             throw new PersistenceException("Error preparing lecturer update statement", e);
         }
-    }
-
-    @Override
-    protected void prepareInsertStatement(PreparedStatement statement, Lecturer lecturer) throws PersistenceException {
-        prepareUpdateStatement(statement, lecturer);
     }
 
     @Override

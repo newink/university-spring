@@ -33,7 +33,7 @@ public class Lecturer implements Identified {
         this.firstName = parameterMap.get("first_name")[0];
         this.lastName = parameterMap.get("last_name")[0];
         this.email = parameterMap.get("email")[0];
-        this.degree = Degree.valueOf(parameterMap.get("degree")[0]);
+        this.degree = Degree.valueOf(parameterMap.get("degree")[0].toUpperCase());
         this.disciplines = new ArrayList<>();
     }
 
@@ -79,7 +79,7 @@ public class Lecturer implements Identified {
     }
 
     public void setDegree(String degree) {
-        this.degree = Degree.valueOf(degree);
+        this.degree = Degree.valueOf(degree.toUpperCase());
     }
 
     public void addDiscipline(Discipline discipline) {
@@ -99,7 +99,7 @@ public class Lecturer implements Identified {
     }
 
     public enum Degree {
-        ASSOCIATE, BACHELOR, PROFESSIONAL, MASTER, PHILOSOPHY_DOCTOR;
+        ASSOCIATE, BACHELOR, PROFESSIONAL, MASTER
     }
 
     public int persist() throws PersistenceException {

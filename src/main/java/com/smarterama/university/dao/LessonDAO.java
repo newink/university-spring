@@ -23,7 +23,7 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
     @Override
     protected String getUpdateQuery() {
         return "UPDATE lessons " +
-                "SET room_id = ?, lecturer_id = ?, group_id = ?, discipline_id = ?, start_time = ?, finish_time = ?;";
+                "SET room_id = ?, lecturer_id = ?, group_id = ?, discipline_id = ?, start_time = ?, finish_time = ? WHERE id = ?;";
     }
 
     @Override
@@ -201,6 +201,17 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
 
     @Override
     protected void prepareUpdateStatement(PreparedStatement statement, Lesson lesson) throws PersistenceException {
+        prepareInsertStatement(statement, lesson);
+        try {
+            statement.setInt(7, lesson.getId());
+        } catch (SQLException e) {
+            logger.error("Error preparing lesson update statement", e);
+            throw new PersistenceException("Error preparing lesson insert statement", e);
+        }
+    }
+
+    @Override
+    protected void prepareInsertStatement(PreparedStatement statement, Lesson lesson) throws PersistenceException {
         try {
             statement.setInt(1, lesson.getRoom().getId());
             statement.setInt(2, lesson.getLecturer().getId());
@@ -212,11 +223,6 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
             logger.error("Error preparing lesson update statement", e);
             throw new PersistenceException("Error preparing lesson update statement", e);
         }
-    }
-
-    @Override
-    protected void prepareInsertStatement(PreparedStatement statement, Lesson lesson) throws PersistenceException {
-        prepareUpdateStatement(statement, lesson);
     }
 
     @Override

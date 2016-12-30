@@ -64,7 +64,7 @@ public class TimetableTest {
         physicsGroup.persist();
 
         mathLecturer = new Lecturer();
-        mathLecturer.setDegree("PHILOSOPHY_DOCTOR");
+        mathLecturer.setDegree("BACHELOR");
         mathLecturer.setEmail("lecturer1@email.com");
         mathLecturer.setFirstName("Jeremy");
         mathLecturer.setLastName("Clarkson");
@@ -72,7 +72,7 @@ public class TimetableTest {
         mathLecturer.persist();
 
         physicsLecturer = new Lecturer();
-        physicsLecturer.setDegree("PHILOSOPHY_DOCTOR");
+        physicsLecturer.setDegree("BACHELOR");
         physicsLecturer.setEmail("lecturer2@email.com");
         physicsLecturer.setFirstName("Richard");
         physicsLecturer.setLastName("Hammond");
