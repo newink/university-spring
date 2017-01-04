@@ -1,7 +1,6 @@
 package com.smarterama.university.servlets;
 
 import com.smarterama.university.domain.Lecturer;
-import com.smarterama.university.domain.Room;
 import com.smarterama.university.exceptions.PersistenceException;
 
 import javax.servlet.ServletException;

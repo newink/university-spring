@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../partials/header.jsp" />
+<jsp:include page="../partials/header.jsp"/>
 <body>
 <div class="container">
     <div class="jumbotron">
@@ -24,12 +24,14 @@
                     <tbody>
                     <c:forEach items="${groups}" var="group">
                         <tr>
-                            <td><c:out value="${group.id}" /></td>
-                            <td><c:out value="${group.groupNumber}" /></td>
-                            <td><a href="/university/group?action=update&id=${group.id}"><i class="fa fa-pencil"></i></a></td>
+                            <td><c:out value="${group.id}"/></td>
+                            <td><c:out value="${group.groupNumber}"/></td>
+                            <td><a href="/university/group?action=update&id=${group.id}"><i
+                                    class="fa fa-pencil"></i></a></td>
                             <td>
-                                <form method="post" action="/university/group" class="inline">
+                                <form method="post" action="/university/delete" class="inline">
                                     <input type="hidden" name="id" value="${group.id}">
+                                    <input type="hidden" name="entity" value="group">
                                     <button type="submit" class="link-button">
                                         <i class="fa fa-times"></i>
                                     </button>

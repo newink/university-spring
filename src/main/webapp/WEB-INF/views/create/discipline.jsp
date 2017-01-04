@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../partials/header.jsp" />
+<jsp:include page="../partials/header.jsp"/>
 <body>
 <div class="container">
     <div class="col-md-5">
@@ -15,7 +15,7 @@
             </c:if>
             <fieldset class="form-group">
                 <label for="name">Discipline Name</label>
-                <input required type="text" class="form-control" id="name" name="name">
+                <input required type="text" class="form-control" id="name" name="name" value="${discipline.name}">
             </fieldset>
             <fieldset class="form-group">
                 <label for="test_type">Final Exam Type</label>

@@ -38,6 +38,7 @@ public class Student implements Identified {
         this.address = parameterMap.get("address")[0];
         this.course = Integer.parseInt(parameterMap.get("course")[0]);
         this.isSubsidized = "on".equals(parameterMap.get("first_name")[0]);
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
     }
 
     @Override
@@ -115,6 +116,7 @@ public class Student implements Identified {
         group = readStudent.getGroup();
         firstName = readStudent.getFirstName();
         lastName = readStudent.getLastName();
+        course = readStudent.getCourse();
         isSubsidized = readStudent.isSubsidized();
         address = readStudent.getAddress();
         return this;

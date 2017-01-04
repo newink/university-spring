@@ -21,31 +21,29 @@ public class GroupServlet extends HttpServlet {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            request.setAttribute("id", id);
+            Group group = new Group();
+            group.setId(id);
+            try {
+                request.setAttribute("group", group.retrieve());
+                request.setAttribute("id", id);
+            } catch (PersistenceException e) {
+                String error = "Error: " + e.getMessage();
+                request.setAttribute("error", error);
+                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : -1;
         try {
-            if (request.getParameter("group_number") != null) {
-                Group group = new Group(request.getParameterMap());
-
-                if (id != -1) {
-                    group.setId(id);
-                    group.update();
-                } else {
-                    group.persist();
-                }
-
+            Group group = new Group(request.getParameterMap());
+            if (group.getId() != -1) {
+                group.update();
             } else {
-                Group group = new Group();
-                group.setId(id);
-                group.delete();
+                group.persist();
             }
-
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

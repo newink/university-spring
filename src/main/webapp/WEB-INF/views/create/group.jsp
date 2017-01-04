@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../partials/header.jsp" />
+<jsp:include page="../partials/header.jsp"/>
 <body>
 <div class="container">
     <div class="col-md-5">
@@ -15,7 +15,8 @@
             </c:if>
             <fieldset class="form-group">
                 <label for="group_number">Group Number</label>
-                <input required type="number" class="form-control" id="group_number" name="group_number">
+                <input required type="number" class="form-control" id="group_number" name="group_number"
+                       value="${group.groupNumber}">
             </fieldset>
             <button type="submit" class="btn btn-default">Submit</button>
         </form>

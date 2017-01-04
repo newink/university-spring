@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../partials/header.jsp" />
+<jsp:include page="../partials/header.jsp"/>
 <body>
 <div class="container">
     <div class="jumbotron">
@@ -27,15 +27,17 @@
                     <tbody>
                     <c:forEach items="${lecturers}" var="lecturer">
                         <tr>
-                            <td><c:out value="${lecturer.id}" /></td>
-                            <td><c:out value="${lecturer.firstName}" /></td>
-                            <td><c:out value="${lecturer.lastName}" /></td>
-                            <td><c:out value="${lecturer.email}" /></td>
-                            <td><c:out value="${lecturer.degree}" /></td>
-                            <td><a href="/university/lecturer?action=update&id=${lecturer.id}"><i class="fa fa-pencil"></i></a></td>
+                            <td><c:out value="${lecturer.id}"/></td>
+                            <td><c:out value="${lecturer.firstName}"/></td>
+                            <td><c:out value="${lecturer.lastName}"/></td>
+                            <td><c:out value="${lecturer.email}"/></td>
+                            <td><c:out value="${lecturer.degree}"/></td>
+                            <td><a href="/university/lecturer?action=update&id=${lecturer.id}"><i
+                                    class="fa fa-pencil"></i></a></td>
                             <td>
-                                <form method="post" action="/university/lecturer" class="inline">
+                                <form method="post" action="/university/delete" class="inline">
                                     <input type="hidden" name="id" value="${lecturer.id}">
+                                    <input type="hidden" name="entity" value="lecturer">
                                     <button type="submit" class="link-button">
                                         <i class="fa fa-times"></i>
                                     </button>

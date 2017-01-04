@@ -7,13 +7,8 @@ import org.slf4j.LoggerFactory;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public class ConnectionFactoryImpl implements ConnectionFactory {
     private static Logger logger = LoggerFactory.getLogger(ConnectionFactoryImpl.class);
@@ -21,8 +16,8 @@ public class ConnectionFactoryImpl implements ConnectionFactory {
 
     public ConnectionFactoryImpl() {
         try {
-            InitialContext ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/postgres");
+            InitialContext initialContext = new InitialContext();
+            dataSource = (DataSource) initialContext.lookup("java:comp/env/jdbc/postgres");
         } catch (NamingException e) {
             logger.error("Can not resolve datasource: ", e);
         }

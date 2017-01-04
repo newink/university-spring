@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../partials/header.jsp" />
+<jsp:include page="../partials/header.jsp"/>
 <body>
 <div class="container">
     <div class="jumbotron">
@@ -25,13 +25,15 @@
                     <tbody>
                     <c:forEach items="${disciplines}" var="discipline">
                         <tr>
-                            <td><c:out value="${discipline.id}" /></td>
-                            <td><c:out value="${discipline.name}" /></td>
-                            <td><c:out value="${discipline.finalExamType}" /></td>
-                            <td><a href="/university/discipline?action=update&id=${discipline.id}"><i class="fa fa-pencil"></i></a></td>
+                            <td><c:out value="${discipline.id}"/></td>
+                            <td><c:out value="${discipline.name}"/></td>
+                            <td><c:out value="${discipline.finalExamType}"/></td>
+                            <td><a href="/university/discipline?action=update&id=${discipline.id}"><i
+                                    class="fa fa-pencil"></i></a></td>
                             <td>
-                                <form method="post" action="/university/discipline" class="inline">
+                                <form method="post" action="/university/delete" class="inline">
                                     <input type="hidden" name="id" value="${discipline.id}">
+                                    <input type="hidden" name="entity" value="discipline">
                                     <button type="submit" class="link-button">
                                         <i class="fa fa-times"></i>
                                     </button>

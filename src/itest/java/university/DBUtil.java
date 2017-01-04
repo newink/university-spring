@@ -16,49 +16,49 @@ public class DBUtil {
                 "DROP TABLE IF EXISTS lecturers_disciplines CASCADE;";
         String tablesQuery =
                 "CREATE TABLE IF NOT EXISTS groups (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "group_number INTEGER NOT NULL" +
-                ");" +
-                "CREATE TABLE IF NOT EXISTS disciplines (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "test_type VARCHAR(40) NOT NULL," +
-                    "name VARCHAR(40) NOT NULL" +
-                ");" +
-                "CREATE TABLE IF NOT EXISTS rooms (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "room_number INTEGER NOT NULL," +
-                    "capacity INTEGER NOT NULL" +
-                ");" +
-                "CREATE TABLE IF NOT EXISTS lecturers (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "first_name VARCHAR(40) NOT NULL," +
-                    "last_name VARCHAR(40) NOT NULL," +
-                    "email VARCHAR(40) NOT NULL," +
-                    "degree VARCHAR(40) NOT NULL" +
-                ");" +
-                "CREATE TABLE IF NOT EXISTS students (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "address VARCHAR(40) NOT NULL," +
-                    "course INTEGER NOT NULL," +
-                    "first_name VARCHAR(40) NOT NULL," +
-                    "last_name VARCHAR(40) NOT NULL," +
-                    "subsidized BOOLEAN NOT NULL," +
-                    "group_id INTEGER REFERENCES groups(id)" +
-                    ");" +
-                "CREATE TABLE lessons (" +
-                    "id SERIAL PRIMARY KEY," +
-                    "group_id INTEGER REFERENCES groups(id)," +
-                    "lecturer_id INTEGER REFERENCES lecturers(id)," +
-                    "discipline_id INTEGER REFERENCES disciplines(id)," +
-                    "room_id INTEGER REFERENCES rooms(id)," +
-                    "start_time TIMESTAMP NOT NULL," +
-                    "finish_time TIMESTAMP NOT NULL" +
-                ");" +
-                "CREATE TABLE IF NOT EXISTS lecturers_disciplines (" +
-                    "lecturer_id INTEGER REFERENCES lecturers(id) ON DELETE CASCADE," +
-                    "discipline_id INTEGER REFERENCES disciplines(id) ON DELETE CASCADE," +
-                    "PRIMARY KEY (lecturer_id, discipline_id)" +
-                ");";
+                        "id SERIAL PRIMARY KEY," +
+                        "group_number INTEGER NOT NULL" +
+                        ");" +
+                        "CREATE TABLE IF NOT EXISTS disciplines (" +
+                        "id SERIAL PRIMARY KEY," +
+                        "test_type VARCHAR(40) NOT NULL," +
+                        "name VARCHAR(40) NOT NULL" +
+                        ");" +
+                        "CREATE TABLE IF NOT EXISTS rooms (" +
+                        "id SERIAL PRIMARY KEY," +
+                        "room_number INTEGER NOT NULL," +
+                        "capacity INTEGER NOT NULL" +
+                        ");" +
+                        "CREATE TABLE IF NOT EXISTS lecturers (" +
+                        "id SERIAL PRIMARY KEY," +
+                        "first_name VARCHAR(40) NOT NULL," +
+                        "last_name VARCHAR(40) NOT NULL," +
+                        "email VARCHAR(40) NOT NULL," +
+                        "degree VARCHAR(40) NOT NULL" +
+                        ");" +
+                        "CREATE TABLE IF NOT EXISTS students (" +
+                        "id SERIAL PRIMARY KEY," +
+                        "address VARCHAR(40) NOT NULL," +
+                        "course INTEGER NOT NULL," +
+                        "first_name VARCHAR(40) NOT NULL," +
+                        "last_name VARCHAR(40) NOT NULL," +
+                        "subsidized BOOLEAN NOT NULL," +
+                        "group_id INTEGER REFERENCES groups(id)" +
+                        ");" +
+                        "CREATE TABLE lessons (" +
+                        "id SERIAL PRIMARY KEY," +
+                        "group_id INTEGER REFERENCES groups(id)," +
+                        "lecturer_id INTEGER REFERENCES lecturers(id)," +
+                        "discipline_id INTEGER REFERENCES disciplines(id)," +
+                        "room_id INTEGER REFERENCES rooms(id)," +
+                        "start_time TIMESTAMP NOT NULL," +
+                        "finish_time TIMESTAMP NOT NULL" +
+                        ");" +
+                        "CREATE TABLE IF NOT EXISTS lecturers_disciplines (" +
+                        "lecturer_id INTEGER REFERENCES lecturers(id) ON DELETE CASCADE," +
+                        "discipline_id INTEGER REFERENCES disciplines(id) ON DELETE CASCADE," +
+                        "PRIMARY KEY (lecturer_id, discipline_id)" +
+                        ");";
         PreparedStatement statement = connection.prepareStatement(dropQuery + tablesQuery);
         statement.execute();
         statement.close();

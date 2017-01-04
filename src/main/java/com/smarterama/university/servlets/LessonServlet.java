@@ -44,62 +44,61 @@ public class LessonServlet extends HttpServlet {
         request.setAttribute("lecturers", lecturerList);
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            request.setAttribute("id", id);
+            Lesson lesson = new Lesson();
+            lesson.setId(id);
+            try {
+                request.setAttribute("lesson", lesson.retrieve());
+                request.setAttribute("id", id);
+            } catch (PersistenceException e) {
+                String error = "Error: " + e.getMessage();
+                request.setAttribute("error", error);
+                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : -1;
         try {
-            if (request.getParameter("room") != null) {
-                String startDateString = request.getParameter("start_date");
-                String finishDateString = request.getParameter("finish_date");
+            String startDateString = request.getParameter("start_date");
+            String finishDateString = request.getParameter("finish_date");
 
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                Date startDate;
-                Date finishDate;
-                try {
-                    startDate = format.parse(startDateString);
-                    finishDate = format.parse(finishDateString);
-                } catch (ParseException e) {
-                    throw new ServletException(e);
-                }
-
-                Lesson lesson = new Lesson();
-                lesson.setStartDate(startDate);
-                lesson.setFinishDate(finishDate);
-                Room room = new Room();
-                room.setId(Integer.parseInt(request.getParameter("room")));
-                lesson.setRoom(room.retrieve());
-
-                Lecturer lecturer = new Lecturer();
-                lecturer.setId(Integer.parseInt(request.getParameter("lecturer")));
-                lesson.setLecturer(lecturer.retrieve());
-
-                Group group = new Group();
-                group.setId(Integer.parseInt(request.getParameter("group")));
-                lesson.setGroup(group.retrieve());
-
-                Discipline discipline = new Discipline();
-                discipline.setId(Integer.parseInt(request.getParameter("discipline")));
-                lesson.setDiscipline(discipline.retrieve());
-
-                if (id != -1) {
-                    lesson.setId(id);
-                    lesson.update();
-                } else {
-                    lesson.persist();
-                }
-
-            } else {
-                Lecturer lecturer = new Lecturer();
-                lecturer.setId(id);
-                lecturer.delete();
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            Date startDate;
+            Date finishDate;
+            try {
+                startDate = format.parse(startDateString);
+                finishDate = format.parse(finishDateString);
+            } catch (ParseException e) {
+                throw new ServletException(e);
             }
 
-            response.sendRedirect(REDIRECT_ADDRESS);
+            Lesson lesson = new Lesson();
+            lesson.setStartDate(startDate);
+            lesson.setFinishDate(finishDate);
+            Room room = new Room();
+            room.setId(Integer.parseInt(request.getParameter("room")));
+            lesson.setRoom(room.retrieve());
+
+            Lecturer lecturer = new Lecturer();
+            lecturer.setId(Integer.parseInt(request.getParameter("lecturer")));
+            lesson.setLecturer(lecturer.retrieve());
+
+            Group group = new Group();
+            group.setId(Integer.parseInt(request.getParameter("group")));
+            lesson.setGroup(group.retrieve());
+
+            Discipline discipline = new Discipline();
+            discipline.setId(Integer.parseInt(request.getParameter("discipline")));
+            lesson.setDiscipline(discipline.retrieve());
+
+            if (lesson.getId() != -1) {
+                lesson.update();
+            } else {
+                lesson.persist();
+            }
+            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);

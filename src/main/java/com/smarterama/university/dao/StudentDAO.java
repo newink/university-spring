@@ -3,14 +3,14 @@ package com.smarterama.university.dao;
 import com.smarterama.university.domain.Group;
 import com.smarterama.university.domain.Student;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class StudentDAO extends AbstractJDBCDao<Student> {
     private static final Logger logger = LoggerFactory.getLogger(StudentDAO.class);

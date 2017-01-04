@@ -21,31 +21,29 @@ public class DisciplineServlet extends HttpServlet {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            request.setAttribute("id", id);
+            Discipline discipline = new Discipline();
+            discipline.setId(id);
+            try {
+                request.setAttribute("discipline", discipline.retrieve());
+                request.setAttribute("id", id);
+            } catch (PersistenceException e) {
+                String error = "Error: " + e.getMessage();
+                request.setAttribute("error", error);
+                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : -1;
         try {
-            if (request.getParameter("name") != null) {
-                Discipline discipline = new Discipline(request.getParameterMap());
-
-                if (id != -1) {
-                    discipline.setId(id);
-                    discipline.update();
-                } else {
-                    discipline.persist();
-                }
-
+            Discipline discipline = new Discipline(request.getParameterMap());
+            if (discipline.getId() != -1) {
+                discipline.update();
             } else {
-                Discipline discipline = new Discipline();
-                discipline.setId(id);
-                discipline.delete();
+                discipline.persist();
             }
-
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

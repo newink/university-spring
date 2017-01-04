@@ -6,8 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class LessonDAO extends AbstractJDBCDao<Lesson> {
 
@@ -50,8 +51,8 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE group_id = ? AND DATE(start_time) = DATE(?)";
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, group.getId());
             statement.setTimestamp(2, new Timestamp(date.getTime()));
@@ -76,8 +77,8 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE lecturer_id = ? AND DATE(start_time) = DATE(?)";
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, lecturer.getId());
             statement.setTimestamp(2, new Timestamp(date.getTime()));
@@ -102,8 +103,8 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE room_id = ?";
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, room.getId());
             ResultSet resultSet = statement.executeQuery();
@@ -127,8 +128,8 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE group_id = ? AND start_time >= ? AND start_time <= ?";
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, group.getId());
             statement.setTimestamp(2, new Timestamp(startDate.getTime()));
@@ -154,8 +155,8 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE lecturer_id = ? AND start_time >= ? AND start_time <= ?";
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, lecturer.getId());
             statement.setTimestamp(2, new Timestamp(startDate.getTime()));
@@ -181,8 +182,8 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE start_time >= ? AND start_time <= ?";
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setTimestamp(1, new Timestamp(startDate.getTime()));
             statement.setTimestamp(2, new Timestamp(finishDate.getTime()));

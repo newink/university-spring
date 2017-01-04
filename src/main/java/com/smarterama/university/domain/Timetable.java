@@ -3,7 +3,6 @@ package com.smarterama.university.domain;
 import com.smarterama.university.dao.LessonDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class Timetable {
         }
         return true;
     }
-    
+
     private LessonDAO getDAO() {
         if (lessonDAO == null) {
             lessonDAO = new LessonDAO();

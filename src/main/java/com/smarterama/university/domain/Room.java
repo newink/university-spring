@@ -28,6 +28,7 @@ public class Room implements Identified {
     public Room(Map<String, String[]> parameterMap) {
         this.capacity = Integer.parseInt(parameterMap.get("capacity")[0]);
         this.roomNumber = Integer.parseInt(parameterMap.get("room_number")[0]);
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
     }
 
     @Override

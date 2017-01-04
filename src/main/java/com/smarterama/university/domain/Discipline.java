@@ -29,6 +29,7 @@ public class Discipline implements Identified {
     public Discipline(Map<String, String[]> parameterMap) {
         this.name = parameterMap.get("name")[0];
         this.finalExamType = TestType.valueOf(parameterMap.get("test_type")[0].toUpperCase());
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class Discipline implements Identified {
     }
 
     public int persist() throws PersistenceException {
-       return getDAO().persist(this);
+        return getDAO().persist(this);
     }
 
     public int update() throws PersistenceException {

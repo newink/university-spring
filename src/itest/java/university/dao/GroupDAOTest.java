@@ -15,7 +15,7 @@ public class GroupDAOTest {
     private Group testedGroup;
 
     @Before
-    public void setUp() throws Exception{
+    public void setUp() throws Exception {
         Connection connection = DBUtil.getTestConnection();
         groupDAO = new GroupDAO();
         testedGroup = new Group(422);

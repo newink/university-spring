@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(value = "/student")
 public class StudentServlet extends HttpServlet {
@@ -20,37 +21,44 @@ public class StudentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
+        List<Group> groupList = null;
+        try {
+            groupList = new Group().getAll();
+            request.setAttribute("groups", groupList);
+        } catch (PersistenceException e) {
+            String error = "Error: " + e.getMessage();
+            request.setAttribute("error", error);
+            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+        }
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            request.setAttribute("id", id);
+            Student student = new Student();
+            student.setId(id);
+            try {
+                request.setAttribute("student", student.retrieve());
+                request.setAttribute("id", id);
+            } catch (PersistenceException e) {
+                String error = "Error: " + e.getMessage();
+                request.setAttribute("error", error);
+                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : -1;
         try {
-            if (request.getParameter("first_name") != null) {
-                Student student = new Student(request.getParameterMap());
-                Group group = new Group();
-                group.setId(Integer.parseInt(request.getParameter("group_id")));
-                group.retrieve();
-                student.setGroup(group);
+            Student student = new Student(request.getParameterMap());
+            Group group = new Group();
+            group.setId(Integer.parseInt(request.getParameter("group_id")));
+            student.setGroup(group.retrieve());
 
-                if (id != -1) {
-                    student.setId(id);
-                    student.update();
-                } else {
-                    student.persist();
-                }
-
+            if (student.getId() != -1) {
+                student.update();
             } else {
-                Student student = new Student();
-                student.setId(id);
-                student.delete();
+                student.persist();
             }
-
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

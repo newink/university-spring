@@ -21,31 +21,29 @@ public class RoomServlet extends HttpServlet {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            request.setAttribute("id", id);
+            Room room = new Room();
+            room.setId(id);
+            try {
+                request.setAttribute("room", room.retrieve());
+                request.setAttribute("id", id);
+            } catch (PersistenceException e) {
+                String error = "Error: " + e.getMessage();
+                request.setAttribute("error", error);
+                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : -1;
         try {
-            if (request.getParameter("room_number") != null) {
-                Room room = new Room(request.getParameterMap());
-
-                if (id != -1) {
-                    room.setId(id);
-                    room.update();
-                } else {
-                    room.persist();
-                }
-
+            Room room = new Room(request.getParameterMap());
+            if (room.getId() != -1) {
+                room.update();
             } else {
-                Room room = new Room();
-                room.setId(id);
-                room.delete();
+                room.persist();
             }
-
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

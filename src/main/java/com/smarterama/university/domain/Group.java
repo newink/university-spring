@@ -6,7 +6,9 @@ import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class Group implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Group.class);
@@ -23,6 +25,7 @@ public class Group implements Identified {
 
     public Group(Map<String, String[]> parameterMap) {
         this.groupNumber = Integer.parseInt(parameterMap.get("group_number")[0]);
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
     }
 
     public int getId() {

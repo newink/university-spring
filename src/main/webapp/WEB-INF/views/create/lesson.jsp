@@ -1,7 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../partials/header.jsp" />
+<jsp:include page="../partials/header.jsp"/>
 <body>
 <div class="container">
     <div class="col-md-5">
@@ -17,7 +17,7 @@
                 <label for="room">Room</label>
                 <select id="room" name="room">
                     <c:forEach items="${rooms}" var="room">
-                        <option value="${room.id}"><c:out value="${room.roomNumber}" /></option>
+                        <option value="${room.id}"><c:out value="${room.roomNumber}"/></option>
                     </c:forEach>
                 </select>
             </fieldset>
@@ -25,7 +25,8 @@
                 <label for="lecturer">Lecturer</label>
                 <select id="lecturer" name="lecturer">
                     <c:forEach items="${lecturers}" var="lecturer">
-                        <option value="${lecturer.id}"><c:out value="${lecturer.firstName} ${lecturer.lastName}" /></option>
+                        <option value="${lecturer.id}"><c:out
+                                value="${lecturer.firstName} ${lecturer.lastName}"/></option>
                     </c:forEach>
                 </select>
             </fieldset>
@@ -33,7 +34,7 @@
                 <label for="group">Group</label>
                 <select id="group" name="group">
                     <c:forEach items="${groups}" var="group">
-                        <option value="${group.id}"><c:out value="${group.groupNumber}" /></option>
+                        <option value="${group.id}"><c:out value="${group.groupNumber}"/></option>
                     </c:forEach>
                 </select>
             </fieldset>
@@ -41,7 +42,7 @@
                 <label for="discipline">Discipline</label>
                 <select id="discipline" name="discipline">
                     <c:forEach items="${disciplines}" var="discipline">
-                        <option value="${discipline.id}"><c:out value="${discipline.name}" /></option>
+                        <option value="${discipline.id}"><c:out value="${discipline.name}"/></option>
                     </c:forEach>
                 </select>
             </fieldset>

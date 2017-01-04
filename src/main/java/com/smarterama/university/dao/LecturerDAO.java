@@ -47,7 +47,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
                 " VALUES (?, ?);";
         int count;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement  = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
              PreparedStatement disciplineStatement = connection.prepareStatement(disciplinesQuery)) {
 
@@ -86,7 +86,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
                 " VALUES (?, ?);";
         int count;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement  = connection.prepareStatement(query);
+             PreparedStatement statement = connection.prepareStatement(query);
              PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
              PreparedStatement disciplineStatement = connection.prepareStatement(disciplinesQuery)) {
 
@@ -118,9 +118,9 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
         String disciplinesQuery = "SELECT * FROM disciplines INNER JOIN lecturers_disciplines " +
                 "ON lecturers_disciplines.discipline_id = disciplines.id " +
                 "WHERE lecturers_disciplines.lecturer_id = ?;";
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query);
-              PreparedStatement disciplinesStatement = connection.prepareStatement(disciplinesQuery);)  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query);
+             PreparedStatement disciplinesStatement = connection.prepareStatement(disciplinesQuery);) {
 
             statement.setInt(1, key);
             ResultSet resultSet = statement.executeQuery();
@@ -162,8 +162,8 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
         String disciplinesQuery = "SELECT * FROM disciplines INNER JOIN lecturers_disciplines " +
                 "ON lecturers_disciplines.discipline_id = disciplines.id " +
                 "WHERE lecturers_disciplines.lecturer_id = ?;";
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Lecturer addedLecturer = new Lecturer();

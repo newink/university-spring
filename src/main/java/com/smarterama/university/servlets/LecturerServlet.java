@@ -32,40 +32,38 @@ public class LecturerServlet extends HttpServlet {
         request.setAttribute("disciplines", disciplineList);
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            request.setAttribute("id", id);
+            Lecturer lecturer = new Lecturer();
+            lecturer.setId(id);
+            try {
+                request.setAttribute("lecturer", lecturer.retrieve());
+                request.setAttribute("id", id);
+            } catch (PersistenceException e) {
+                String error = "Error: " + e.getMessage();
+                request.setAttribute("error", error);
+                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : -1;
         try {
-            if (request.getParameter("first_name") != null) {
-                Lecturer lecturer = new Lecturer(request.getParameterMap());
-                String[] disciplineStrings = request.getParameterValues("disciplines");
+            Lecturer lecturer = new Lecturer(request.getParameterMap());
+            String[] disciplineStrings = request.getParameterValues("disciplines");
 
-                for (String disciplineString : disciplineStrings) {
-                    int disciplineId = Integer.parseInt(disciplineString);
-                    Discipline discipline = new Discipline();
-                    discipline.setId(disciplineId);
-                    discipline.retrieve();
-                    lecturer.addDiscipline(discipline);
-                }
-
-                if (id != -1) {
-                    lecturer.setId(id);
-                    lecturer.update();
-                } else {
-                    lecturer.persist();
-                }
-
-            } else {
-                Lecturer lecturer = new Lecturer();
-                lecturer.setId(id);
-                lecturer.delete();
+            for (String disciplineString : disciplineStrings) {
+                int disciplineId = Integer.parseInt(disciplineString);
+                Discipline discipline = new Discipline();
+                discipline.setId(disciplineId);
+                discipline.retrieve();
+                lecturer.addDiscipline(discipline);
             }
-
+            if (lecturer.getId() != -1) {
+                lecturer.update();
+            } else {
+                lecturer.persist();
+            }
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

@@ -33,6 +33,7 @@ public class Lecturer implements Identified {
         this.firstName = parameterMap.get("first_name")[0];
         this.lastName = parameterMap.get("last_name")[0];
         this.email = parameterMap.get("email")[0];
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
         this.degree = Degree.valueOf(parameterMap.get("degree")[0].toUpperCase());
         this.disciplines = new ArrayList<>();
     }

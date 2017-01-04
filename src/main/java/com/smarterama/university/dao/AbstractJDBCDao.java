@@ -40,7 +40,7 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
         String query = getInsertQuery();
         int count;
         try (Connection connection = connectionFactory.getConnection();
-             PreparedStatement statement  = connection.prepareStatement(query)) {
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             prepareInsertStatement(statement, object);
             count = statement.executeUpdate();
@@ -55,8 +55,8 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
     public T read(int key) throws PersistenceException {
         List<T> resultList;
         String query = String.format("%s WHERE %s.id = ?", getSelectQuery(), getTableName());
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, key);
             ResultSet resultSet = statement.executeQuery();
@@ -76,8 +76,8 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
     public int update(T object) throws PersistenceException {
         String query = getUpdateQuery();
         int count;
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             prepareUpdateStatement(statement, object);
             count = statement.executeUpdate();
@@ -92,8 +92,8 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
     public int delete(T object) throws PersistenceException {
         String query = getDeleteQuery();
         int count;
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, object.getId());
             count = statement.executeUpdate();
         } catch (SQLException e) {
@@ -108,8 +108,8 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
         List<T> resultList;
         String query = getSelectQuery();
         ResultSet resultSet;
-        try  (Connection connection = connectionFactory.getConnection();
-              PreparedStatement statement  = connection.prepareStatement(query))  {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
 
             resultSet = statement.executeQuery();
             resultList = parseResultSet(resultSet);
