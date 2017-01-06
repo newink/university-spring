@@ -18,7 +18,6 @@ import java.util.List;
 @WebServlet(value = "/lesson")
 public class LessonServlet extends HttpServlet {
     private static final String INSERT_UPDATE_JSP = "/WEB-INF/views/create/lesson.jsp";
-    private static final String INDEX_JSP = "/WEB-INF/views/indexes/lessons.jsp";
     private static final String REDIRECT_ADDRESS = "/university/lessons";
 
     @Override
@@ -36,7 +35,7 @@ public class LessonServlet extends HttpServlet {
         } catch (PersistenceException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);
-            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
         request.setAttribute("disciplines", disciplineList);
         request.setAttribute("rooms", roomList);
@@ -52,7 +51,7 @@ public class LessonServlet extends HttpServlet {
             } catch (PersistenceException e) {
                 String error = "Error: " + e.getMessage();
                 request.setAttribute("error", error);
-                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+                getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
             }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
@@ -61,6 +60,7 @@ public class LessonServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : -1;
             String startDateString = request.getParameter("start_date");
             String finishDateString = request.getParameter("finish_date");
 
@@ -75,6 +75,7 @@ public class LessonServlet extends HttpServlet {
             }
 
             Lesson lesson = new Lesson();
+            lesson.setId(id);
             lesson.setStartDate(startDate);
             lesson.setFinishDate(finishDate);
             Room room = new Room();
@@ -98,11 +99,11 @@ public class LessonServlet extends HttpServlet {
             } else {
                 lesson.persist();
             }
-            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);
-            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
     }
 }

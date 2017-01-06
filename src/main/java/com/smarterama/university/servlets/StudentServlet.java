@@ -15,7 +15,6 @@ import java.util.List;
 @WebServlet(value = "/student")
 public class StudentServlet extends HttpServlet {
     private static final String INSERT_UPDATE_JSP = "/WEB-INF/views/create/student.jsp";
-    private static final String INDEX_JSP = "/WEB-INF/views/indexes/student.jsp";
     private static final String REDIRECT_ADDRESS = "/university/students";
 
     @Override
@@ -28,7 +27,7 @@ public class StudentServlet extends HttpServlet {
         } catch (PersistenceException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);
-            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
@@ -40,7 +39,7 @@ public class StudentServlet extends HttpServlet {
             } catch (PersistenceException e) {
                 String error = "Error: " + e.getMessage();
                 request.setAttribute("error", error);
-                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+                getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
             }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
@@ -63,7 +62,7 @@ public class StudentServlet extends HttpServlet {
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);
-            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
     }
 }

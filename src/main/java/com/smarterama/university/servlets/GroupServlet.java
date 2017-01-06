@@ -13,7 +13,6 @@ import java.io.IOException;
 @WebServlet(value = "/group")
 public class GroupServlet extends HttpServlet {
     private static final String INSERT_UPDATE_JSP = "/WEB-INF/views/create/group.jsp";
-    private static final String INDEX_JSP = "/WEB-INF/views/indexes/groups.jsp";
     private static final String REDIRECT_ADDRESS = "/university/groups";
 
     @Override
@@ -29,7 +28,7 @@ public class GroupServlet extends HttpServlet {
             } catch (PersistenceException e) {
                 String error = "Error: " + e.getMessage();
                 request.setAttribute("error", error);
-                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+                getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
             }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
@@ -48,7 +47,7 @@ public class GroupServlet extends HttpServlet {
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);
-            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
     }
 }

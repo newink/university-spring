@@ -47,9 +47,9 @@ public class DeleteServlet extends HttpServlet {
                 lecturer.delete();
             }
             if ("lesson".equals(entityName)){
-                Lecturer lecturer = new Lecturer();
-                lecturer.setId(id);
-                lecturer.delete();
+                Lesson lesson = new Lesson();
+                lesson.setId(id);
+                lesson.delete();
             }
         } catch (PersistenceException e) {
             String error = "Error: " + e.getMessage();

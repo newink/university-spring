@@ -13,7 +13,6 @@ import java.io.IOException;
 @WebServlet(value = "/room")
 public class RoomServlet extends HttpServlet {
     private static final String INSERT_UPDATE_JSP = "/WEB-INF/views/create/room.jsp";
-    private static final String INDEX_JSP = "/WEB-INF/views/indexes/rooms.jsp";
     private static final String REDIRECT_ADDRESS = "/university/rooms";
 
     @Override
@@ -29,7 +28,7 @@ public class RoomServlet extends HttpServlet {
             } catch (PersistenceException e) {
                 String error = "Error: " + e.getMessage();
                 request.setAttribute("error", error);
-                getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+                getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
             }
         }
         getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
@@ -48,7 +47,7 @@ public class RoomServlet extends HttpServlet {
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);
-            getServletContext().getRequestDispatcher(INDEX_JSP).forward(request, response);
+            getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
     }
 }
