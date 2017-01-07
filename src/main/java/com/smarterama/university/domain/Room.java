@@ -5,11 +5,17 @@ import com.smarterama.university.dao.RoomDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Component
+@Scope("prototype")
 public class Room implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Room.class);
     private RoomDAO roomDAO;
@@ -25,7 +31,8 @@ public class Room implements Identified {
     public Room() {
     }
 
-    public Room(Map<String, String[]> parameterMap) {
+
+    public void setFieldsFromRequest(Map<String, String[]> parameterMap) {
         this.capacity = Integer.parseInt(parameterMap.get("capacity")[0]);
         this.roomNumber = Integer.parseInt(parameterMap.get("room_number")[0]);
         this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
@@ -57,19 +64,19 @@ public class Room implements Identified {
     }
 
     public int persist() throws PersistenceException {
-        return getDAO().persist(this);
+        return roomDAO.persist(this);
     }
 
     public int update() throws PersistenceException {
-        return getDAO().update(this);
+        return roomDAO.update(this);
     }
 
     public int delete() throws PersistenceException {
-        return getDAO().delete(this);
+        return roomDAO.delete(this);
     }
 
     public Room retrieve() throws PersistenceException {
-        Room readRoom = getDAO().read(id);
+        Room readRoom = roomDAO.read(id);
         roomNumber = readRoom.getRoomNumber();
         capacity = readRoom.getCapacity();
         return this;
@@ -78,21 +85,14 @@ public class Room implements Identified {
     public List<Room> getAll() throws PersistenceException {
         List<Room> roomsList = null;
         try {
-            roomsList = getDAO().findAll();
+            roomsList = roomDAO.findAll();
         } catch (PersistenceException e) {
             logger.error("Error getting rooms list", e);
             throw e;
         }
         return roomsList;
     }
-
-    private RoomDAO getDAO() {
-        if (roomDAO == null) {
-            roomDAO = new RoomDAO();
-        }
-        return roomDAO;
-    }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,5 +115,10 @@ public class Room implements Identified {
                 ", capacity=" + capacity +
                 ", roomNumber=" + roomNumber +
                 '}';
+    }
+
+    @Autowired
+    public void setRoomDAO(RoomDAO roomDAO) {
+        this.roomDAO = roomDAO;
     }
 }

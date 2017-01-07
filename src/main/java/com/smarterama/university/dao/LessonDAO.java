@@ -4,12 +4,14 @@ import com.smarterama.university.domain.*;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Repository
 public class LessonDAO extends AbstractJDBCDao<Lesson> {
 
     private static Logger logger = LoggerFactory.getLogger(LessonDAO.class);
@@ -51,7 +53,7 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE group_id = ? AND DATE(start_time) = DATE(?)";
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, group.getId());
@@ -77,7 +79,7 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE lecturer_id = ? AND DATE(start_time) = DATE(?)";
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, lecturer.getId());
@@ -103,7 +105,7 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE room_id = ?";
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, room.getId());
@@ -128,7 +130,7 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE group_id = ? AND start_time >= ? AND start_time <= ?";
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, group.getId());
@@ -155,7 +157,7 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE lecturer_id = ? AND start_time >= ? AND start_time <= ?";
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, lecturer.getId());
@@ -182,7 +184,7 @@ public class LessonDAO extends AbstractJDBCDao<Lesson> {
                 "INNER JOIN lecturers ON lecturer_id = lecturers.id " +
                 "INNER JOIN disciplines ON discipline_id = disciplines.id " +
                 "WHERE start_time >= ? AND start_time <= ?";
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setTimestamp(1, new Timestamp(startDate.getTime()));

@@ -3,20 +3,21 @@ package com.smarterama.university.dao;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Repository
 public abstract class AbstractJDBCDao<T extends Identified> implements GenericDAO<T> {
-    protected ConnectionFactory connectionFactory;
+    protected DataSource dataSource;
     private static Logger logger = LoggerFactory.getLogger(AbstractJDBCDao.class);
-
-    public AbstractJDBCDao() {
-        connectionFactory = new ConnectionFactoryImpl();
-    }
 
     protected abstract String getSelectQuery();
 
@@ -39,7 +40,7 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
     public int persist(T object) throws PersistenceException {
         String query = getInsertQuery();
         int count;
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             prepareInsertStatement(statement, object);
@@ -55,7 +56,7 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
     public T read(int key) throws PersistenceException {
         List<T> resultList;
         String query = String.format("%s WHERE %s.id = ?", getSelectQuery(), getTableName());
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setInt(1, key);
@@ -76,7 +77,7 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
     public int update(T object) throws PersistenceException {
         String query = getUpdateQuery();
         int count;
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             prepareUpdateStatement(statement, object);
@@ -92,7 +93,7 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
     public int delete(T object) throws PersistenceException {
         String query = getDeleteQuery();
         int count;
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, object.getId());
             count = statement.executeUpdate();
@@ -108,7 +109,7 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
         List<T> resultList;
         String query = getSelectQuery();
         ResultSet resultSet;
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             resultSet = statement.executeQuery();
@@ -119,5 +120,10 @@ public abstract class AbstractJDBCDao<T extends Identified> implements GenericDA
             throw new PersistenceException("Problem getting all records from table", e);
         }
         return resultList;
+    }
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }

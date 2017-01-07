@@ -5,11 +5,17 @@ import com.smarterama.university.dao.StudentDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Component
+@Scope("prototype")
 public class Student implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Student.class);
     private StudentDAO studentDAO;
@@ -32,7 +38,7 @@ public class Student implements Identified {
         this.isSubsidized = isSubsidized;
     }
 
-    public Student(Map<String, String[]> parameterMap) {
+    public void setFieldsFromRequest(Map<String, String[]> parameterMap) {
         this.firstName = parameterMap.get("first_name")[0];
         this.lastName = parameterMap.get("last_name")[0];
         this.address = parameterMap.get("address")[0];
@@ -100,19 +106,19 @@ public class Student implements Identified {
 
 
     public int persist() throws PersistenceException {
-        return getDAO().persist(this);
+        return studentDAO.persist(this);
     }
 
     public int update() throws PersistenceException {
-        return getDAO().update(this);
+        return studentDAO.update(this);
     }
 
     public int delete() throws PersistenceException {
-        return getDAO().delete(this);
+        return studentDAO.delete(this);
     }
 
     public Student retrieve() throws PersistenceException {
-        Student readStudent = getDAO().read(id);
+        Student readStudent = studentDAO.read(id);
         group = readStudent.getGroup();
         firstName = readStudent.getFirstName();
         lastName = readStudent.getLastName();
@@ -125,19 +131,12 @@ public class Student implements Identified {
     public List<Student> getAll() throws PersistenceException {
         List<Student> studentsList = null;
         try {
-            studentsList = getDAO().findAll();
+            studentsList = studentDAO.findAll();
         } catch (PersistenceException e) {
             logger.error("Error getting students list", e);
             throw e;
         }
         return studentsList;
-    }
-
-    private StudentDAO getDAO() {
-        if (studentDAO == null) {
-            studentDAO = new StudentDAO();
-        }
-        return studentDAO;
     }
 
     @Override
@@ -170,5 +169,10 @@ public class Student implements Identified {
                 ", isSubsidized=" + isSubsidized +
                 ", group=" + group +
                 '}';
+    }
+
+    @Autowired
+    public void setStudentDAO(StudentDAO studentDAO) {
+        this.studentDAO = studentDAO;
     }
 }

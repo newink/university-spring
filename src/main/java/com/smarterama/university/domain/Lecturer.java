@@ -5,12 +5,17 @@ import com.smarterama.university.dao.LecturerDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Component
+@Scope("prototype")
 public class Lecturer implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Lecturer.class);
     private LecturerDAO lecturerDAO;
@@ -29,7 +34,7 @@ public class Lecturer implements Identified {
         this.disciplines = new ArrayList<>();
     }
 
-    public Lecturer(Map<String, String[]> parameterMap) {
+    public void setFieldsFromRequest(Map<String, String[]> parameterMap) {
         this.firstName = parameterMap.get("first_name")[0];
         this.lastName = parameterMap.get("last_name")[0];
         this.email = parameterMap.get("email")[0];
@@ -104,19 +109,19 @@ public class Lecturer implements Identified {
     }
 
     public int persist() throws PersistenceException {
-        return getDAO().persist(this);
+        return lecturerDAO.persist(this);
     }
 
     public int update() throws PersistenceException {
-        return getDAO().update(this);
+        return lecturerDAO.update(this);
     }
 
     public int delete() throws PersistenceException {
-        return getDAO().delete(this);
+        return lecturerDAO.delete(this);
     }
 
     public Lecturer retrieve() throws PersistenceException {
-        Lecturer readLecturer = getDAO().read(id);
+        Lecturer readLecturer = lecturerDAO.read(id);
         firstName = readLecturer.getFirstName();
         lastName = readLecturer.getLastName();
         email = readLecturer.getEmail();
@@ -128,19 +133,12 @@ public class Lecturer implements Identified {
     public List<Lecturer> getAll() throws PersistenceException {
         List<Lecturer> lecturersList = null;
         try {
-            lecturersList = getDAO().findAll();
+            lecturersList = lecturerDAO.findAll();
         } catch (PersistenceException e) {
             logger.error("Error getting lecturers list", e);
             throw e;
         }
         return lecturersList;
-    }
-
-    private LecturerDAO getDAO() {
-        if (lecturerDAO == null) {
-            lecturerDAO = new LecturerDAO();
-        }
-        return lecturerDAO;
     }
 
     @Override
@@ -170,5 +168,10 @@ public class Lecturer implements Identified {
                 ", degree=" + degree +
                 ", disciplines=" + disciplines +
                 '}';
+    }
+
+    @Autowired
+    public void setLecturerDAO(LecturerDAO lecturerDAO) {
+        this.lecturerDAO = lecturerDAO;
     }
 }

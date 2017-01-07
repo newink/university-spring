@@ -5,11 +5,16 @@ import com.smarterama.university.dao.Identified;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Component
+@Scope("prototype")
 public class Discipline implements Identified {
 
     private static Logger logger = LoggerFactory.getLogger(Discipline.class);
@@ -24,12 +29,6 @@ public class Discipline implements Identified {
     }
 
     public Discipline() {
-    }
-
-    public Discipline(Map<String, String[]> parameterMap) {
-        this.name = parameterMap.get("name")[0];
-        this.finalExamType = TestType.valueOf(parameterMap.get("test_type")[0].toUpperCase());
-        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
     }
 
     @Override
@@ -57,20 +56,25 @@ public class Discipline implements Identified {
         this.finalExamType = TestType.valueOf(finalExamType.toUpperCase());
     }
 
+    public void setFieldsFromRequest(Map<String, String[]> parameterMap) {
+        this.name = parameterMap.get("name")[0];
+        this.finalExamType = TestType.valueOf(parameterMap.get("test_type")[0].toUpperCase());
+    }
+
     public int persist() throws PersistenceException {
-        return getDAO().persist(this);
+        return disciplineDAO.persist(this);
     }
 
     public int update() throws PersistenceException {
-        return getDAO().update(this);
+        return disciplineDAO.update(this);
     }
 
     public int delete() throws PersistenceException {
-        return getDAO().delete(this);
+        return disciplineDAO.delete(this);
     }
 
     public Discipline retrieve() throws PersistenceException {
-        Discipline readDiscipline = getDAO().read(id);
+        Discipline readDiscipline = disciplineDAO.read(id);
         name = readDiscipline.getName();
         finalExamType = readDiscipline.getFinalExamType();
         return this;
@@ -79,19 +83,12 @@ public class Discipline implements Identified {
     public List<Discipline> getAll() throws PersistenceException {
         List<Discipline> disciplineList = null;
         try {
-            disciplineList = getDAO().findAll();
+            disciplineList = disciplineDAO.findAll();
         } catch (PersistenceException e) {
             logger.error("Error getting disciplines list", e);
             throw e;
         }
         return disciplineList;
-    }
-
-    private DisciplineDAO getDAO() {
-        if (disciplineDAO == null) {
-            disciplineDAO = new DisciplineDAO();
-        }
-        return disciplineDAO;
     }
 
     @Override
@@ -119,5 +116,10 @@ public class Discipline implements Identified {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Autowired
+    public void setDisciplineDAO(DisciplineDAO disciplineDAO) {
+        this.disciplineDAO = disciplineDAO;
     }
 }

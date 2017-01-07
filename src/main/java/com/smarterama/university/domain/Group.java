@@ -5,11 +5,16 @@ import com.smarterama.university.dao.Identified;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Component
+@Scope("prototype")
 public class Group implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Group.class);
     private GroupDAO groupDAO;
@@ -23,7 +28,7 @@ public class Group implements Identified {
     public Group() {
     }
 
-    public Group(Map<String, String[]> parameterMap) {
+    public void setFieldsFromRequest(Map<String, String[]> parameterMap) {
         this.groupNumber = Integer.parseInt(parameterMap.get("group_number")[0]);
         this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
     }
@@ -45,19 +50,19 @@ public class Group implements Identified {
     }
 
     public int persist() throws PersistenceException {
-        return getDAO().persist(this);
+        return groupDAO.persist(this);
     }
 
     public int update() throws PersistenceException {
-        return getDAO().update(this);
+        return groupDAO.update(this);
     }
 
     public int delete() throws PersistenceException {
-        return getDAO().delete(this);
+        return groupDAO.delete(this);
     }
 
     public Group retrieve() throws PersistenceException {
-        Group readGroup = getDAO().read(id);
+        Group readGroup = groupDAO.read(id);
         groupNumber = readGroup.getGroupNumber();
         return this;
     }
@@ -65,7 +70,7 @@ public class Group implements Identified {
     public List<Group> getAll() throws PersistenceException {
         List<Group> groupList = null;
         try {
-            groupList = getDAO().findAll();
+            groupList = groupDAO.findAll();
         } catch (PersistenceException e) {
             logger.error("Error getting groups list", e);
             throw e;
@@ -73,12 +78,6 @@ public class Group implements Identified {
         return groupList;
     }
 
-    private GroupDAO getDAO() {
-        if (groupDAO == null) {
-            groupDAO = new GroupDAO();
-        }
-        return groupDAO;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -100,5 +99,10 @@ public class Group implements Identified {
                 ", id=" + id +
                 ", groupNumber=" + groupNumber +
                 '}';
+    }
+
+    @Autowired
+    public void setGroupDAO(GroupDAO groupDAO) {
+        this.groupDAO = groupDAO;
     }
 }

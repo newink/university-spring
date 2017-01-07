@@ -2,7 +2,10 @@ package com.smarterama.university.servlets;
 
 import com.smarterama.university.domain.Room;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,12 +18,14 @@ public class RoomServlet extends HttpServlet {
     private static final String INSERT_UPDATE_JSP = "/WEB-INF/views/create/room.jsp";
     private static final String REDIRECT_ADDRESS = "/university/rooms";
 
+    @Autowired
+    private Room room;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            Room room = new Room();
             room.setId(id);
             try {
                 request.setAttribute("room", room.retrieve());
@@ -37,7 +42,7 @@ public class RoomServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Room room = new Room(request.getParameterMap());
+            room.setFieldsFromRequest(request.getParameterMap());
             if (room.getId() != -1) {
                 room.update();
             } else {
@@ -49,5 +54,11 @@ public class RoomServlet extends HttpServlet {
             request.setAttribute("error", error);
             getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 }

@@ -5,6 +5,9 @@ import com.smarterama.university.dao.LessonDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -12,6 +15,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+@Component
+@Scope("prototype")
 public class Lesson implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Lesson.class);
     private LessonDAO lessonDAO;
@@ -98,19 +103,19 @@ public class Lesson implements Identified {
     }
 
     public int persist() throws PersistenceException {
-        return getDAO().persist(this);
+        return lessonDAO.persist(this);
     }
 
     public int update() throws PersistenceException {
-        return getDAO().update(this);
+        return lessonDAO.update(this);
     }
 
     public int delete() throws PersistenceException {
-        return getDAO().delete(this);
+        return lessonDAO.delete(this);
     }
 
     public Lesson retrieve() throws PersistenceException {
-        Lesson readLesson = getDAO().read(id);
+        Lesson readLesson = lessonDAO.read(id);
         discipline = readLesson.getDiscipline();
         group = readLesson.getGroup();
         lecturer = readLesson.getLecturer();
@@ -123,19 +128,12 @@ public class Lesson implements Identified {
     public List<Lesson> getAll() throws PersistenceException {
         List<Lesson> lessonsList = null;
         try {
-            lessonsList = getDAO().findAll();
+            lessonsList = lessonDAO.findAll();
         } catch (PersistenceException e) {
             logger.error("Error getting lessons list", e);
             throw e;
         }
         return lessonsList;
-    }
-
-    private LessonDAO getDAO() {
-        if (lessonDAO == null) {
-            lessonDAO = new LessonDAO();
-        }
-        return lessonDAO;
     }
 
     @Override
@@ -168,5 +166,10 @@ public class Lesson implements Identified {
                 ", startDate=" + startDate +
                 ", finishDate=" + finishDate +
                 '}';
+    }
+
+    @Autowired
+    public void setLessonDAO(LessonDAO lessonDAO) {
+        this.lessonDAO = lessonDAO;
     }
 }

@@ -3,7 +3,10 @@ package com.smarterama.university.servlets;
 import com.smarterama.university.domain.Group;
 import com.smarterama.university.domain.Student;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,12 +20,17 @@ public class StudentServlet extends HttpServlet {
     private static final String INSERT_UPDATE_JSP = "/WEB-INF/views/create/student.jsp";
     private static final String REDIRECT_ADDRESS = "/university/students";
 
+    @Autowired
+    private Student student;
+    @Autowired
+    private Group group;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
         List<Group> groupList = null;
         try {
-            groupList = new Group().getAll();
+            groupList = group.getAll();
             request.setAttribute("groups", groupList);
         } catch (PersistenceException e) {
             String error = "Error: " + e.getMessage();
@@ -31,7 +39,6 @@ public class StudentServlet extends HttpServlet {
         }
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            Student student = new Student();
             student.setId(id);
             try {
                 request.setAttribute("student", student.retrieve());
@@ -48,8 +55,7 @@ public class StudentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Student student = new Student(request.getParameterMap());
-            Group group = new Group();
+            student.setFieldsFromRequest(request.getParameterMap());
             group.setId(Integer.parseInt(request.getParameter("group_id")));
             student.setGroup(group.retrieve());
 
@@ -64,5 +70,11 @@ public class StudentServlet extends HttpServlet {
             request.setAttribute("error", error);
             getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 }

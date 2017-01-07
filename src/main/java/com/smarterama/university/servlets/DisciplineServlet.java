@@ -2,7 +2,10 @@ package com.smarterama.university.servlets;
 
 import com.smarterama.university.domain.Discipline;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,12 +18,14 @@ public class DisciplineServlet extends HttpServlet {
     private static final String INSERT_UPDATE_JSP = "/WEB-INF/views/create/discipline.jsp";
     private static final String REDIRECT_ADDRESS = "/university/disciplines";
 
+    @Autowired
+    private Discipline discipline;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
-            Discipline discipline = new Discipline();
             discipline.setId(id);
             try {
                 request.setAttribute("discipline", discipline.retrieve());
@@ -37,7 +42,7 @@ public class DisciplineServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Discipline discipline = new Discipline(request.getParameterMap());
+            discipline.setFieldsFromRequest(request.getParameterMap());
             if (discipline.getId() != -1) {
                 discipline.update();
             } else {
@@ -49,5 +54,11 @@ public class DisciplineServlet extends HttpServlet {
             request.setAttribute("error", error);
             getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 }

@@ -5,11 +5,13 @@ import com.smarterama.university.domain.Lecturer;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
 
     private static Logger logger = LoggerFactory.getLogger(LecturerDAO.class);
@@ -46,7 +48,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
         String disciplinesQuery = "INSERT INTO lecturers_disciplines (lecturer_id, discipline_id)" +
                 " VALUES (?, ?);";
         int count;
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
              PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
              PreparedStatement disciplineStatement = connection.prepareStatement(disciplinesQuery)) {
@@ -85,7 +87,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
         String disciplinesQuery = "INSERT INTO lecturers_disciplines (lecturer_id, discipline_id)" +
                 " VALUES (?, ?);";
         int count;
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery);
              PreparedStatement disciplineStatement = connection.prepareStatement(disciplinesQuery)) {
@@ -118,7 +120,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
         String disciplinesQuery = "SELECT * FROM disciplines INNER JOIN lecturers_disciplines " +
                 "ON lecturers_disciplines.discipline_id = disciplines.id " +
                 "WHERE lecturers_disciplines.lecturer_id = ?;";
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              PreparedStatement disciplinesStatement = connection.prepareStatement(disciplinesQuery);) {
 
@@ -162,7 +164,7 @@ public class LecturerDAO extends AbstractJDBCDao<Lecturer> {
         String disciplinesQuery = "SELECT * FROM disciplines INNER JOIN lecturers_disciplines " +
                 "ON lecturers_disciplines.discipline_id = disciplines.id " +
                 "WHERE lecturers_disciplines.lecturer_id = ?;";
-        try (Connection connection = connectionFactory.getConnection();
+        try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
