@@ -1,33 +1,52 @@
 package com.smarterama.university.domain;
 
-import com.smarterama.university.dao.Identified;
-import com.smarterama.university.dao.LecturerDAO;
+import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Configurable(autowire = Autowire.BY_TYPE)
-public class Lecturer implements Identified {
+@Entity
+@Table(name = "lecturers")
+public class Lecturer {
     private static Logger logger = LoggerFactory.getLogger(Lecturer.class);
-    private int id;
+
+    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @Column
     private String firstName;
+
+    @Column
     private String lastName;
+
+    @Column
     private String email;
+
+    @Column
+    @Enumerated(EnumType.STRING)
     private Degree degree;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "lecturers_disciplines",
+            joinColumns = { @JoinColumn(name = "lecturer_id") },
+            inverseJoinColumns = { @JoinColumn(name = "discipline_id") })
     private List<Discipline> disciplines;
 
+    @Transient
     @Autowired
-    private LecturerDAO lecturerDAO;
+    private GenericDAO<Lecturer, Integer> lecturerDAO;
 
 
     public Lecturer(String firstName, String lastName, String email, Degree degree) {
@@ -42,17 +61,16 @@ public class Lecturer implements Identified {
         this.firstName = parameterMap.get("first_name")[0];
         this.lastName = parameterMap.get("last_name")[0];
         this.email = parameterMap.get("email")[0];
-        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : null;
         this.degree = Degree.valueOf(parameterMap.get("degree")[0].toUpperCase());
         this.disciplines = new ArrayList<>();
     }
 
-    @Override
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -88,8 +106,8 @@ public class Lecturer implements Identified {
         return degree;
     }
 
-    public void setDegree(String degree) {
-        this.degree = Degree.valueOf(degree.toUpperCase());
+    public void setDegree(Degree degree) {
+        this.degree = degree;
     }
 
     public void addDiscipline(Discipline discipline) {
@@ -108,24 +126,27 @@ public class Lecturer implements Identified {
         return disciplines;
     }
 
+    public void setDisciplines(List<Discipline> disciplines) {
+        this.disciplines = disciplines;
+    }
+
     public enum Degree {
         ASSOCIATE, BACHELOR, PROFESSIONAL, MASTER
     }
 
-    public int persist() throws PersistenceException {
-        return lecturerDAO.persist(this);
+    @Transactional
+    public void persist() throws PersistenceException {
+        lecturerDAO.saveOrUpdate(this);
     }
 
-    public int update() throws PersistenceException {
-        return lecturerDAO.update(this);
+    @Transactional
+    public void delete() throws PersistenceException {
+        lecturerDAO.delete(this);
     }
 
-    public int delete() throws PersistenceException {
-        return lecturerDAO.delete(this);
-    }
-
+    @Transactional
     public Lecturer retrieve() throws PersistenceException {
-        Lecturer readLecturer = lecturerDAO.read(id);
+        Lecturer readLecturer = lecturerDAO.get(Lecturer.class, id);
         firstName = readLecturer.getFirstName();
         lastName = readLecturer.getLastName();
         email = readLecturer.getEmail();
@@ -134,11 +155,12 @@ public class Lecturer implements Identified {
         return this;
     }
 
+    @Transactional
     public List<Lecturer> getAll() throws PersistenceException {
         List<Lecturer> lecturersList = null;
         try {
-            lecturersList = lecturerDAO.findAll();
-        } catch (PersistenceException e) {
+            lecturersList = lecturerDAO.getAll(Lecturer.class);
+        } catch (HibernateException e) {
             logger.error("Error getting lecturers list", e);
             throw e;
         }

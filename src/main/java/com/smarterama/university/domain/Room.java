@@ -1,30 +1,38 @@
 package com.smarterama.university.domain;
 
-import com.smarterama.university.dao.Identified;
-import com.smarterama.university.dao.RoomDAO;
+import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Configurable(autowire = Autowire.BY_TYPE)
-public class Room implements Identified {
+@Entity
+@Table(name = "rooms")
+public class Room {
     private static Logger logger = LoggerFactory.getLogger(Room.class);
-    private int id;
+
+    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @Column
     private int capacity;
+
+    @Column
     private int roomNumber;
 
+    @Transient
     @Autowired
-    private RoomDAO roomDAO;
+    private GenericDAO<Room, Integer> roomDAO;
 
 
     public Room(int capacity, int roomNumber) {
@@ -39,15 +47,14 @@ public class Room implements Identified {
     public void setFieldsFromRequest(Map<String, String[]> parameterMap) {
         this.capacity = Integer.parseInt(parameterMap.get("capacity")[0]);
         this.roomNumber = Integer.parseInt(parameterMap.get("room_number")[0]);
-        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : null;
     }
 
-    @Override
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -67,30 +74,30 @@ public class Room implements Identified {
         this.roomNumber = roomNumber;
     }
 
-    public int persist() throws PersistenceException {
-        return roomDAO.persist(this);
+    @Transactional
+    public void persist() throws PersistenceException {
+        roomDAO.save(this);
     }
 
-    public int update() throws PersistenceException {
-        return roomDAO.update(this);
+    @Transactional
+    public void delete() throws PersistenceException {
+        roomDAO.delete(this);
     }
 
-    public int delete() throws PersistenceException {
-        return roomDAO.delete(this);
-    }
-
+    @Transactional
     public Room retrieve() throws PersistenceException {
-        Room readRoom = roomDAO.read(id);
+        Room readRoom = roomDAO.get(Room.class, id);
         roomNumber = readRoom.getRoomNumber();
         capacity = readRoom.getCapacity();
         return this;
     }
 
+    @Transactional
     public List<Room> getAll() throws PersistenceException {
         List<Room> roomsList = null;
         try {
-            roomsList = roomDAO.findAll();
-        } catch (PersistenceException e) {
+            roomsList = roomDAO.getAll(Room.class);
+        } catch (HibernateException e) {
             logger.error("Error getting rooms list", e);
             throw e;
         }

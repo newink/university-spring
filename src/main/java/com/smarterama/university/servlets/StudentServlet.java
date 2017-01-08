@@ -57,11 +57,7 @@ public class StudentServlet extends HttpServlet {
             group.setId(Integer.parseInt(request.getParameter("group_id")));
             student.setGroup(group.retrieve());
 
-            if (student.getId() != -1) {
-                student.update();
-            } else {
-                student.persist();
-            }
+            student.persist();
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

@@ -42,11 +42,7 @@ public class DisciplineServlet extends HttpServlet {
         try {
             Discipline discipline = new Discipline();
             discipline.setFieldsFromRequest(request.getParameterMap());
-            if (discipline.getId() != -1) {
-                discipline.update();
-            } else {
-                discipline.persist();
-            }
+            discipline.persist();
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

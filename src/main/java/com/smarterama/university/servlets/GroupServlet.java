@@ -42,11 +42,7 @@ public class GroupServlet extends HttpServlet {
         try {
             Group group = new Group();
             group.setFieldsFromRequest(request.getParameterMap());
-            if (group.getId() != -1) {
-                group.update();
-            } else {
-                group.persist();
-            }
+            group.persist();
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

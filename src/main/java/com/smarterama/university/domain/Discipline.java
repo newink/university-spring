@@ -1,28 +1,40 @@
 package com.smarterama.university.domain;
 
-import com.smarterama.university.dao.DisciplineDAO;
-import com.smarterama.university.dao.Identified;
+import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Configurable(autowire = Autowire.BY_TYPE)
-public class Discipline implements Identified {
-
+@Entity
+@Table(name = "disciplines")
+public class Discipline {
     private static Logger logger = LoggerFactory.getLogger(Discipline.class);
-    private int id;
+
+    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @Column
     private String name;
+
+    @Column
+    @Enumerated(EnumType.STRING)
     private TestType finalExamType;
 
+    @Transient
     @Autowired
-    private DisciplineDAO disciplineDAO;
+    private GenericDAO<Discipline, Integer> disciplineDAO;
 
 
     public Discipline(String name, TestType finalExamType) {
@@ -33,12 +45,11 @@ public class Discipline implements Identified {
     public Discipline() {
     }
 
-    @Override
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -61,32 +72,33 @@ public class Discipline implements Identified {
     public void setFieldsFromRequest(Map<String, String[]> parameterMap) {
         this.name = parameterMap.get("name")[0];
         this.finalExamType = TestType.valueOf(parameterMap.get("test_type")[0].toUpperCase());
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : null;
     }
 
-    public int persist() throws PersistenceException {
-        return disciplineDAO.persist(this);
+    @Transactional
+    public void persist() throws PersistenceException {
+        disciplineDAO.saveOrUpdate(this);
     }
 
-    public int update() throws PersistenceException {
-        return disciplineDAO.update(this);
+    @Transactional
+    public void delete() throws PersistenceException {
+        disciplineDAO.delete(this);
     }
 
-    public int delete() throws PersistenceException {
-        return disciplineDAO.delete(this);
-    }
-
+    @Transactional
     public Discipline retrieve() throws PersistenceException {
-        Discipline readDiscipline = disciplineDAO.read(id);
+        Discipline readDiscipline = disciplineDAO.get(Discipline.class, id);
         name = readDiscipline.getName();
         finalExamType = readDiscipline.getFinalExamType();
         return this;
     }
 
+    @Transactional
     public List<Discipline> getAll() throws PersistenceException {
         List<Discipline> disciplineList = null;
         try {
-            disciplineList = disciplineDAO.findAll();
-        } catch (PersistenceException e) {
+            disciplineList = disciplineDAO.getAll(Discipline.class);
+        } catch (HibernateException e) {
             logger.error("Error getting disciplines list", e);
             throw e;
         }
