@@ -16,28 +16,18 @@ import java.util.List;
 
 @WebServlet(value = "/lessons")
 public class LessonIndexServlet extends HttpServlet {
-
-    @Autowired
-    private Lesson lesson;
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Lesson> lessonList = null;
         String message = "";
 
         try {
-            lessonList = lesson.getAll();
+            lessonList = new Lesson().getAll();
         } catch (PersistenceException e) {
             message = "Error: " + e.getMessage();
         }
         request.getSession().setAttribute("lessons", lessonList);
         request.getSession().setAttribute("error", message);
         getServletContext().getRequestDispatcher("/WEB-INF/views/indexes/lessons.jsp").forward(request, response);
-    }
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 }

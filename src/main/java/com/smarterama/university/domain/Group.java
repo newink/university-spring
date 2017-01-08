@@ -5,7 +5,9 @@ import com.smarterama.university.dao.Identified;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +15,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Component
-@Scope("prototype")
+@Configurable(autowire = Autowire.BY_TYPE)
 public class Group implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Group.class);
-    private GroupDAO groupDAO;
     private int id;
     private int groupNumber;
+
+    @Autowired
+    private GroupDAO groupDAO;
+
 
     public Group(int groupNumber) {
         this.groupNumber = groupNumber;
@@ -99,10 +103,5 @@ public class Group implements Identified {
                 ", id=" + id +
                 ", groupNumber=" + groupNumber +
                 '}';
-    }
-
-    @Autowired
-    public void setGroupDAO(GroupDAO groupDAO) {
-        this.groupDAO = groupDAO;
     }
 }

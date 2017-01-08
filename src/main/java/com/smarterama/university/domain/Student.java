@@ -5,7 +5,9 @@ import com.smarterama.university.dao.StudentDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Component
-@Scope("prototype")
+@Configurable(autowire = Autowire.BY_TYPE)
 public class Student implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Student.class);
-    private StudentDAO studentDAO;
     private int id;
     private String firstName;
     private String lastName;
@@ -26,6 +26,10 @@ public class Student implements Identified {
     private int course;
     private boolean isSubsidized;
     private Group group;
+
+    @Autowired
+    private StudentDAO studentDAO;
+
 
     public Student() {
     }
@@ -169,10 +173,5 @@ public class Student implements Identified {
                 ", isSubsidized=" + isSubsidized +
                 ", group=" + group +
                 '}';
-    }
-
-    @Autowired
-    public void setStudentDAO(StudentDAO studentDAO) {
-        this.studentDAO = studentDAO;
     }
 }

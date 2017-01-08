@@ -5,7 +5,9 @@ import com.smarterama.university.dao.LessonDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +17,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-@Component
-@Scope("prototype")
+@Configurable(autowire = Autowire.BY_TYPE)
 public class Lesson implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Lesson.class);
-    private LessonDAO lessonDAO;
     private int id;
     private Room room;
     private Lecturer lecturer;
@@ -27,6 +27,10 @@ public class Lesson implements Identified {
     private Discipline discipline;
     private Date startDate;
     private Date finishDate;
+
+    @Autowired
+    private LessonDAO lessonDAO;
+
 
     @Override
     public int getId() {
@@ -166,10 +170,5 @@ public class Lesson implements Identified {
                 ", startDate=" + startDate +
                 ", finishDate=" + finishDate +
                 '}';
-    }
-
-    @Autowired
-    public void setLessonDAO(LessonDAO lessonDAO) {
-        this.lessonDAO = lessonDAO;
     }
 }

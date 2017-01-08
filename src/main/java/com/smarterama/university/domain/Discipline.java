@@ -5,23 +5,25 @@ import com.smarterama.university.dao.Identified;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Configurable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Component
-@Scope("prototype")
+@Configurable(autowire = Autowire.BY_TYPE)
 public class Discipline implements Identified {
 
     private static Logger logger = LoggerFactory.getLogger(Discipline.class);
-    private DisciplineDAO disciplineDAO;
     private int id;
     private String name;
     private TestType finalExamType;
+
+    @Autowired
+    private DisciplineDAO disciplineDAO;
+
 
     public Discipline(String name, TestType finalExamType) {
         this.name = name;
@@ -116,10 +118,5 @@ public class Discipline implements Identified {
     @Override
     public int hashCode() {
         return Objects.hash(name);
-    }
-
-    @Autowired
-    public void setDisciplineDAO(DisciplineDAO disciplineDAO) {
-        this.disciplineDAO = disciplineDAO;
     }
 }

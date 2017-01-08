@@ -16,28 +16,18 @@ import java.util.List;
 
 @WebServlet(value = "/disciplines")
 public class DisciplineIndexServlet extends HttpServlet {
-
-    @Autowired
-    private Discipline discipline;
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Discipline> disciplineList = null;
         String message = "";
 
         try {
-            disciplineList = discipline.getAll();
+            disciplineList = new Discipline().getAll();
         } catch (PersistenceException e) {
             message = "Error: " + e.getMessage();
         }
         request.getSession().setAttribute("disciplines", disciplineList);
         request.getSession().setAttribute("error", message);
         getServletContext().getRequestDispatcher("/WEB-INF/views/indexes/disciplines.jsp").forward(request, response);
-    }
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 }

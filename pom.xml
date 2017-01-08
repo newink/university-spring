@@ -64,6 +64,16 @@
           <artifactId>hibernate-core</artifactId>
           <version>5.2.5.Final</version>
       </dependency>
+      <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-aspects</artifactId>
+          <version>4.3.5.RELEASE</version>
+      </dependency>
+      <dependency>
+          <groupId>org.aspectj</groupId>
+          <artifactId>aspectjrt</artifactId>
+          <version>1.8.10</version>
+      </dependency>
   </dependencies>
   <build>
     <finalName>university</finalName>
@@ -122,6 +132,35 @@
                             <include>src/itest/**</include>
                         </includes>
                     </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>aspectj-maven-plugin</artifactId>
+            <version>1.9</version>
+            <configuration>
+                <complianceLevel>1.8</complianceLevel>
+                <encoding>UTF-8</encoding>
+                <aspectLibraries>
+                    <aspectLibrary>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-aspects</artifactId>
+                    </aspectLibrary>
+                </aspectLibraries>
+                <!--
+                  Xlint set to warning alleviate some issues, such as SPR-6819.
+                  Please consider it as optional.
+                  https://jira.springsource.org/browse/SPR-6819
+                -->
+                <Xlint>warning</Xlint>
+            </configuration>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>compile</goal>
+                        <goal>test-compile</goal>
+                    </goals>
                 </execution>
             </executions>
         </plugin>

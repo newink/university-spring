@@ -5,7 +5,9 @@ import com.smarterama.university.dao.LecturerDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -14,17 +16,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Component
-@Scope("prototype")
+@Configurable(autowire = Autowire.BY_TYPE)
 public class Lecturer implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Lecturer.class);
-    private LecturerDAO lecturerDAO;
     private int id;
     private String firstName;
     private String lastName;
     private String email;
     private Degree degree;
     private List<Discipline> disciplines;
+
+    @Autowired
+    private LecturerDAO lecturerDAO;
+
 
     public Lecturer(String firstName, String lastName, String email, Degree degree) {
         this.firstName = firstName;
@@ -168,10 +172,5 @@ public class Lecturer implements Identified {
                 ", degree=" + degree +
                 ", disciplines=" + disciplines +
                 '}';
-    }
-
-    @Autowired
-    public void setLecturerDAO(LecturerDAO lecturerDAO) {
-        this.lecturerDAO = lecturerDAO;
     }
 }

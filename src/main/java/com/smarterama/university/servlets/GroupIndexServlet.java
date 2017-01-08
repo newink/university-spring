@@ -16,28 +16,18 @@ import java.util.List;
 
 @WebServlet(value = "/groups")
 public class GroupIndexServlet extends HttpServlet {
-
-    @Autowired
-    private Group group;
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<Group> groupList = null;
         String message = "";
 
         try {
-            groupList = group.getAll();
+            groupList = new Group().getAll();
         } catch (PersistenceException e) {
             message = "Error: " + e.getMessage();
         }
         request.getSession().setAttribute("groups", groupList);
         request.getSession().setAttribute("error", message);
         getServletContext().getRequestDispatcher("/WEB-INF/views/indexes/groups.jsp").forward(request, response);
-    }
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 }

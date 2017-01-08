@@ -20,17 +20,12 @@ public class LecturerServlet extends HttpServlet {
     private static final String INSERT_UPDATE_JSP = "/WEB-INF/views/create/lecturer.jsp";
     private static final String REDIRECT_ADDRESS = "/university/lecturers";
 
-    @Autowired
-    private Lecturer lecturer;
-    @Autowired
-    private Discipline discipline;
-
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
         List<Discipline> disciplineList = null;
         try {
-            disciplineList = discipline.getAll();
+            disciplineList = new Discipline().getAll();
         } catch (PersistenceException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);
@@ -39,6 +34,7 @@ public class LecturerServlet extends HttpServlet {
         request.setAttribute("disciplines", disciplineList);
         if (action.equalsIgnoreCase("update")) {
             int id = Integer.parseInt(request.getParameter("id"));
+            Lecturer lecturer = new Lecturer();
             lecturer.setId(id);
             try {
                 request.setAttribute("lecturer", lecturer.retrieve());
@@ -55,11 +51,14 @@ public class LecturerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            Lecturer lecturer = new Lecturer();
             lecturer.setFieldsFromRequest(request.getParameterMap());
-            String[] disciplineStrings = request.getParameterValues("disciplines");
+            String[] disciplineStrings = request.getParameterValues("disciplines") != null ?
+                    request.getParameterValues("disciplines") : new String[0];
 
             for (String disciplineString : disciplineStrings) {
                 int disciplineId = Integer.parseInt(disciplineString);
+                Discipline discipline = new Discipline();
                 discipline.setId(disciplineId);
                 discipline.retrieve();
                 lecturer.addDiscipline(discipline);
@@ -75,11 +74,5 @@ public class LecturerServlet extends HttpServlet {
             request.setAttribute("error", error);
             getServletContext().getRequestDispatcher(INSERT_UPDATE_JSP).forward(request, response);
         }
-    }
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
     }
 }

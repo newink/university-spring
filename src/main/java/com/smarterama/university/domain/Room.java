@@ -5,7 +5,9 @@ import com.smarterama.university.dao.RoomDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +16,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@Component
-@Scope("prototype")
+@Configurable(autowire = Autowire.BY_TYPE)
 public class Room implements Identified {
     private static Logger logger = LoggerFactory.getLogger(Room.class);
-    private RoomDAO roomDAO;
     private int id;
     private int capacity;
     private int roomNumber;
+
+    @Autowired
+    private RoomDAO roomDAO;
+
 
     public Room(int capacity, int roomNumber) {
         this.capacity = capacity;
@@ -115,10 +119,5 @@ public class Room implements Identified {
                 ", capacity=" + capacity +
                 ", roomNumber=" + roomNumber +
                 '}';
-    }
-
-    @Autowired
-    public void setRoomDAO(RoomDAO roomDAO) {
-        this.roomDAO = roomDAO;
     }
 }

@@ -2,16 +2,19 @@ package com.smarterama.university.domain;
 
 import com.smarterama.university.dao.LessonDAO;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
-@Component
-@Scope("prototype")
+@Configurable(autowire = Autowire.BY_TYPE)
 public class Timetable {
+
+    @Autowired
     private LessonDAO lessonDAO;
 
     public Timetable() {
@@ -45,10 +48,5 @@ public class Timetable {
             }
         }
         return true;
-    }
-
-    @Autowired
-    public void setLessonDAO(LessonDAO lessonDAO) {
-        this.lessonDAO = lessonDAO;
     }
 }
