@@ -1,30 +1,52 @@
 package com.smarterama.university.domain;
 
-import com.smarterama.university.dao.StudentDAO;
+import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Configurable(autowire = Autowire.BY_TYPE)
+@Entity
+@Table(name = "students")
 public class Student implements DomainObject {
+
     private static Logger logger = LoggerFactory.getLogger(Student.class);
-    private int id;
+
+    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @Column
     private String firstName;
+
+    @Column
     private String lastName;
+
+    @Column
     private String address;
+
+    @Column
     private int course;
+
+    @Column
     private boolean isSubsidized;
+
+    @OneToOne
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @Autowired
-    private StudentDAO studentDAO;
+    @Transient
+    private GenericDAO<Student, Integer> studentDAO;
 
 
     public Student() {
@@ -44,10 +66,9 @@ public class Student implements DomainObject {
         this.address = parameterMap.get("address")[0];
         this.course = Integer.parseInt(parameterMap.get("course")[0]);
         this.isSubsidized = "on".equals(parameterMap.get("first_name")[0]);
-        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : null;
     }
 
-    @Override
     public int getId() {
         return id;
     }
@@ -104,21 +125,19 @@ public class Student implements DomainObject {
         this.group = group;
     }
 
-
-    public int persist() throws PersistenceException {
-        return studentDAO.persist(this);
+    @Transactional
+    public void persist() throws PersistenceException {
+        studentDAO.saveOrUpdate(this);
     }
 
-    public int update() throws PersistenceException {
-        return studentDAO.update(this);
+    @Transactional
+    public void delete() throws PersistenceException {
+        studentDAO.delete(this);
     }
 
-    public int delete() throws PersistenceException {
-        return studentDAO.delete(this);
-    }
-
+    @Transactional
     public Student retrieve() throws PersistenceException {
-        Student readStudent = studentDAO.read(id);
+        Student readStudent = studentDAO.get(Student.class, id);
         group = readStudent.getGroup();
         firstName = readStudent.getFirstName();
         lastName = readStudent.getLastName();
@@ -128,11 +147,12 @@ public class Student implements DomainObject {
         return this;
     }
 
+    @Transactional
     public List<Student> getAll() throws PersistenceException {
         List<Student> studentsList = null;
         try {
-            studentsList = studentDAO.findAll();
-        } catch (PersistenceException e) {
+            studentsList = studentDAO.getAll(Student.class);
+        } catch (HibernateException e) {
             logger.error("Error getting students list", e);
             throw e;
         }

@@ -63,11 +63,7 @@ public class LecturerServlet extends HttpServlet {
                 discipline.retrieve();
                 lecturer.addDiscipline(discipline);
             }
-            if (lecturer.getId() != -1) {
-                lecturer.update();
-            } else {
-                lecturer.persist();
-            }
+            lecturer.persist();
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

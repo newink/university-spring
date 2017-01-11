@@ -1,13 +1,17 @@
 package com.smarterama.university.domain;
 
-import com.smarterama.university.dao.LessonDAO;
+import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.transaction.annotation.Transactional;
 
+
+import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -15,21 +19,42 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Configurable(autowire = Autowire.BY_TYPE)
+@Entity
+@Table(name = "lessons")
 public class Lesson implements DomainObject {
+
     private static Logger logger = LoggerFactory.getLogger(Lesson.class);
-    private int id;
+
+    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @OneToOne
+    @JoinColumn(name = "room_id")
     private Room room;
+
+    @OneToOne
+    @JoinColumn(name = "lecturer_id")
     private Lecturer lecturer;
+
+    @OneToOne
+    @JoinColumn(name = "group_id")
     private Group group;
+
+    @OneToOne
+    @JoinColumn(name = "discipline_id")
     private Discipline discipline;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date startDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date finishDate;
 
+    @Transient
     @Autowired
-    private LessonDAO lessonDAO;
+    private GenericDAO<Lesson, Integer> lessonDAO;
 
 
-    @Override
     public int getId() {
         return id;
     }
@@ -103,34 +128,33 @@ public class Lesson implements DomainObject {
         return startDate.after(betweenStartDate) && startDate.before(betweenFinishDate);
     }
 
-    public int persist() throws PersistenceException {
-        return lessonDAO.persist(this);
+    @Transactional
+    public void persist() throws PersistenceException {
+        lessonDAO.save(this);
     }
 
-    public int update() throws PersistenceException {
-        return lessonDAO.update(this);
+    @Transactional
+    public void update() throws PersistenceException {
+        lessonDAO.saveOrUpdate(this);
     }
 
-    public int delete() throws PersistenceException {
-        return lessonDAO.delete(this);
+    @Transactional
+    public void delete() throws PersistenceException {
+        lessonDAO.delete(this);
     }
 
+    @Transactional
     public Lesson retrieve() throws PersistenceException {
-        Lesson readLesson = lessonDAO.read(id);
-        discipline = readLesson.getDiscipline();
-        group = readLesson.getGroup();
-        lecturer = readLesson.getLecturer();
-        room = readLesson.getRoom();
-        startDate = readLesson.getStartDate();
-        finishDate = readLesson.getFinishDate();
-        return this;
+        Lesson readLesson = lessonDAO.get(Lesson.class, id);
+        return readLesson;
     }
 
+    @Transactional
     public List<Lesson> getAll() throws PersistenceException {
         List<Lesson> lessonsList = null;
         try {
-            lessonsList = lessonDAO.findAll();
-        } catch (PersistenceException e) {
+            lessonsList = lessonDAO.getAll(Lesson.class);
+        } catch (HibernateException e) {
             logger.error("Error getting lessons list", e);
             throw e;
         }

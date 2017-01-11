@@ -42,11 +42,7 @@ public class RoomServlet extends HttpServlet {
         try {
             Room room = new Room();
             room.setFieldsFromRequest(request.getParameterMap());
-            if (room.getId() != -1) {
-                room.update();
-            } else {
-                room.persist();
-            }
+            room.persist();
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

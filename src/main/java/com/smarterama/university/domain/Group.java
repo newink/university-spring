@@ -1,25 +1,37 @@
 package com.smarterama.university.domain;
 
-import com.smarterama.university.dao.GroupDAO;
+
+import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.hibernate.HibernateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 @Configurable(autowire = Autowire.BY_TYPE)
+@Entity
+@Table(name = "groups")
 public class Group implements DomainObject {
+
     private static Logger logger = LoggerFactory.getLogger(Group.class);
-    private int id;
+
+    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    @Column
     private int groupNumber;
 
+    @Transient
     @Autowired
-    private GroupDAO groupDAO;
+    private GenericDAO<Group, Integer> groupDAO;
 
 
     public Group(int groupNumber) {
@@ -31,7 +43,7 @@ public class Group implements DomainObject {
 
     public void setFieldsFromRequest(Map<String, String[]> parameterMap) {
         this.groupNumber = Integer.parseInt(parameterMap.get("group_number")[0]);
-        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : -1;
+        this.id = parameterMap.get("id") != null ? Integer.parseInt(parameterMap.get("id")[0]) : null;
     }
 
     public int getId() {
@@ -50,29 +62,29 @@ public class Group implements DomainObject {
         this.groupNumber = groupNumber;
     }
 
-    public int persist() throws PersistenceException {
-        return groupDAO.persist(this);
+    @Transactional
+    public void persist() throws PersistenceException {
+        groupDAO.saveOrUpdate(this);
     }
 
-    public int update() throws PersistenceException {
-        return groupDAO.update(this);
+    @Transactional
+    public void delete() throws PersistenceException {
+        groupDAO.delete(this);
     }
 
-    public int delete() throws PersistenceException {
-        return groupDAO.delete(this);
-    }
-
+    @Transactional
     public Group retrieve() throws PersistenceException {
-        Group readGroup = groupDAO.read(id);
+        Group readGroup = groupDAO.get(Group.class, id);
         groupNumber = readGroup.getGroupNumber();
         return this;
     }
 
+    @Transactional
     public List<Group> getAll() throws PersistenceException {
         List<Group> groupList = null;
         try {
-            groupList = groupDAO.findAll();
-        } catch (PersistenceException e) {
+            groupList = groupDAO.getAll(Group.class);
+        } catch (HibernateException e) {
             logger.error("Error getting groups list", e);
             throw e;
         }

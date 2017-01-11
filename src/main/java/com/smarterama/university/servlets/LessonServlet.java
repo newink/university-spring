@@ -98,11 +98,7 @@ public class LessonServlet extends HttpServlet {
             discipline.setId(Integer.parseInt(request.getParameter("discipline")));
             lesson.setDiscipline(discipline.retrieve());
 
-            if (lesson.getId() != -1) {
-                lesson.update();
-            } else {
-                lesson.persist();
-            }
+            lesson.persist();
             response.sendRedirect(REDIRECT_ADDRESS);
         } catch (PersistenceException | NumberFormatException e) {
             String error = "Error: " + e.getMessage();

@@ -1,17 +1,40 @@
 package com.smarterama.university.dao;
 
-import com.smarterama.university.exceptions.PersistenceException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.util.List;
 
-public interface GenericDAO<T> {
-    public int persist(T object) throws PersistenceException;
+@Repository
+public class GenericDAO<T, PK extends Serializable> {
+    
+    @Autowired
+    private SessionFactory sessionFactory;
 
-    public T read(int key) throws PersistenceException;
+    public void save(T o){
+        getSession().save(o);
+    }
 
-    public int update(T object) throws PersistenceException;
+    public void delete(Object object){
+        getSession().delete(object);
+    }
 
-    public int delete(T object) throws PersistenceException;
+    public T get(Class<T> type, PK id){
+        return getSession().get(type, id);
+    }
 
-    public List<T> findAll() throws PersistenceException;
+    public void saveOrUpdate(T o){
+        getSession().saveOrUpdate(o);
+    }
+
+    public List<T> getAll(final Class<T> type) {
+        return getSession().createQuery("from " + type.getName()).getResultList();
+    }
+    
+    private Session getSession() {
+        return sessionFactory.getCurrentSession();
+    }
 }

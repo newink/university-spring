@@ -8,11 +8,9 @@ public interface DomainObject {
 
     int getId();
 
-    int persist() throws PersistenceException;
+    void persist() throws PersistenceException;
 
-    int update() throws PersistenceException;
-
-    int delete() throws PersistenceException;
+    void delete() throws PersistenceException;
 
     DomainObject retrieve() throws PersistenceException;
 
