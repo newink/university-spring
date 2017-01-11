@@ -130,7 +130,7 @@ public class Lesson implements DomainObject {
 
     @Transactional
     public void persist() throws PersistenceException {
-        lessonDAO.save(this);
+        lessonDAO.saveOrUpdate(this);
     }
 
     @Transactional

@@ -77,7 +77,7 @@ public class Room implements DomainObject {
 
     @Transactional
     public void persist() throws PersistenceException {
-        roomDAO.save(this);
+        roomDAO.saveOrUpdate(this);
     }
 
     @Transactional
