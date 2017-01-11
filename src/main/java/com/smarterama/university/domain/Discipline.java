@@ -1,7 +1,6 @@
 package com.smarterama.university.domain;
 
 import com.smarterama.university.dao.DisciplineDAO;
-import com.smarterama.university.dao.Identified;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
