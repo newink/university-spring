@@ -2,10 +2,7 @@ package com.smarterama.university.servlets;
 
 import com.smarterama.university.domain.Lesson;
 import com.smarterama.university.exceptions.PersistenceException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,7 +19,7 @@ public class LessonIndexServlet extends HttpServlet {
         String message = "";
 
         try {
-            lessonList = new Lesson().getAll();
+            lessonList = new Lesson().collectAll();
         } catch (PersistenceException e) {
             message = "Error: " + e.getMessage();
         }

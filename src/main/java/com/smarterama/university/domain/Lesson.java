@@ -1,5 +1,7 @@
 package com.smarterama.university.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.hibernate.HibernateException;
@@ -30,6 +32,7 @@ public class Lesson implements DomainObject {
 
     @OneToOne
     @JoinColumn(name = "room_id")
+    @JsonManagedReference
     private Room room;
 
     @OneToOne
@@ -59,10 +62,11 @@ public class Lesson implements DomainObject {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
+    @JsonManagedReference
     public Room getRoom() {
         return room;
     }
@@ -71,6 +75,7 @@ public class Lesson implements DomainObject {
         this.room = room;
     }
 
+    @JsonManagedReference
     public Lecturer getLecturer() {
         return lecturer;
     }
@@ -79,6 +84,7 @@ public class Lesson implements DomainObject {
         this.lecturer = lecturer;
     }
 
+    @JsonManagedReference
     public Group getGroup() {
         return group;
     }
@@ -87,6 +93,7 @@ public class Lesson implements DomainObject {
         this.group = group;
     }
 
+    @JsonManagedReference
     public Discipline getDiscipline() {
         return discipline;
     }
@@ -150,7 +157,7 @@ public class Lesson implements DomainObject {
     }
 
     @Transactional
-    public List<Lesson> getAll() throws PersistenceException {
+    public List<Lesson> collectAll() throws PersistenceException {
         List<Lesson> lessonsList = null;
         try {
             lessonsList = lessonDAO.getAll(Lesson.class);

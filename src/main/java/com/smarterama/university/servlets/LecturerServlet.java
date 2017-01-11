@@ -3,10 +3,7 @@ package com.smarterama.university.servlets;
 import com.smarterama.university.domain.Discipline;
 import com.smarterama.university.domain.Lecturer;
 import com.smarterama.university.exceptions.PersistenceException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,7 +22,7 @@ public class LecturerServlet extends HttpServlet {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
         List<Discipline> disciplineList = null;
         try {
-            disciplineList = new Discipline().getAll();
+            disciplineList = new Discipline().collectAll();
         } catch (PersistenceException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);

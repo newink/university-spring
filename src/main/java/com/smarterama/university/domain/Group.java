@@ -50,7 +50,7 @@ public class Group implements DomainObject {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -80,7 +80,7 @@ public class Group implements DomainObject {
     }
 
     @Transactional
-    public List<Group> getAll() throws PersistenceException {
+    public List<Group> collectAll() throws PersistenceException {
         List<Group> groupList = null;
         try {
             groupList = groupDAO.getAll(Group.class);

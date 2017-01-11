@@ -3,10 +3,7 @@ package com.smarterama.university.servlets;
 import com.smarterama.university.domain.Group;
 import com.smarterama.university.domain.Student;
 import com.smarterama.university.exceptions.PersistenceException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,7 +22,7 @@ public class StudentServlet extends HttpServlet {
         String action = request.getParameter("action") != null ? request.getParameter("action") : "";
         List<Group> groupList = null;
         try {
-            groupList = new Group().getAll();
+            groupList = new Group().collectAll();
             request.setAttribute("groups", groupList);
         } catch (PersistenceException e) {
             String error = "Error: " + e.getMessage();

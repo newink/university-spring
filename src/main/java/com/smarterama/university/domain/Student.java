@@ -73,7 +73,7 @@ public class Student implements DomainObject {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -148,7 +148,7 @@ public class Student implements DomainObject {
     }
 
     @Transactional
-    public List<Student> getAll() throws PersistenceException {
+    public List<Student> collectAll() throws PersistenceException {
         List<Student> studentsList = null;
         try {
             studentsList = studentDAO.getAll(Student.class);

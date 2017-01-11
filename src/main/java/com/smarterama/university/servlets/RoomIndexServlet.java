@@ -2,10 +2,7 @@ package com.smarterama.university.servlets;
 
 import com.smarterama.university.domain.Room;
 import com.smarterama.university.exceptions.PersistenceException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,7 +20,7 @@ public class RoomIndexServlet extends HttpServlet {
         String message = "";
 
         try {
-            roomList = new Room().getAll();
+            roomList = new Room().collectAll();
         } catch (PersistenceException e) {
             message = "Error: " + e.getMessage();
         }

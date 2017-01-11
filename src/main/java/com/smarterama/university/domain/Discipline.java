@@ -1,6 +1,8 @@
 package com.smarterama.university.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.hibernate.HibernateException;
@@ -34,6 +36,7 @@ public class Discipline implements DomainObject {
     private TestType finalExamType;
 
     @Transient
+    @JsonIgnore
     @Autowired
     private GenericDAO<Discipline, Integer> disciplineDAO;
 
@@ -50,7 +53,7 @@ public class Discipline implements DomainObject {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -66,8 +69,8 @@ public class Discipline implements DomainObject {
         return finalExamType;
     }
 
-    public void setFinalExamType(String finalExamType) {
-        this.finalExamType = TestType.valueOf(finalExamType.toUpperCase());
+    public void setFinalExamType(TestType finalExamType) {
+        this.finalExamType = finalExamType;
     }
 
     public void setFieldsFromRequest(Map<String, String[]> parameterMap) {
@@ -95,7 +98,7 @@ public class Discipline implements DomainObject {
     }
 
     @Transactional
-    public List<Discipline> getAll() throws PersistenceException {
+    public List<Discipline> collectAll() throws PersistenceException {
         List<Discipline> disciplineList = null;
         try {
             disciplineList = disciplineDAO.getAll(Discipline.class);

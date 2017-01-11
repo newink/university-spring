@@ -2,10 +2,7 @@ package com.smarterama.university.servlets;
 
 import com.smarterama.university.domain.*;
 import com.smarterama.university.exceptions.PersistenceException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,10 +28,10 @@ public class LessonServlet extends HttpServlet {
         List<Group> groupList = null;
         List<Lecturer> lecturerList = null;
         try {
-            disciplineList = new Discipline().getAll();
-            roomList = new Room().getAll();
-            groupList = new Group().getAll();
-            lecturerList = new Lecturer().getAll();
+            disciplineList = new Discipline().collectAll();
+            roomList = new Room().collectAll();
+            groupList = new Group().collectAll();
+            lecturerList = new Lecturer().collectAll();
         } catch (PersistenceException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);
@@ -63,7 +60,7 @@ public class LessonServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            int id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : -1;
+            Integer id = request.getParameter("id") != null ? Integer.parseInt(request.getParameter("id")) : null;
             String startDateString = request.getParameter("start_date");
             String finishDateString = request.getParameter("finish_date");
 

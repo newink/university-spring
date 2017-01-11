@@ -4,7 +4,7 @@ import com.smarterama.university.exceptions.PersistenceException;
 import java.util.List;
 
 public interface DomainObject {
-    void setId(int id);
+    void setId(Integer id);
 
     int getId();
 
@@ -14,5 +14,5 @@ public interface DomainObject {
 
     DomainObject retrieve() throws PersistenceException;
 
-    List<? extends DomainObject> getAll() throws PersistenceException;
+    List<? extends DomainObject> collectAll() throws PersistenceException;
 }

@@ -1,6 +1,7 @@
 package com.smarterama.university.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.hibernate.HibernateException;
@@ -44,6 +45,7 @@ public class Lecturer implements DomainObject {
     @JoinTable(name = "lecturers_disciplines",
             joinColumns = { @JoinColumn(name = "lecturer_id") },
             inverseJoinColumns = { @JoinColumn(name = "discipline_id") })
+    @JsonManagedReference
     private List<Discipline> disciplines;
 
     @Transient
@@ -72,7 +74,7 @@ public class Lecturer implements DomainObject {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -158,7 +160,7 @@ public class Lecturer implements DomainObject {
     }
 
     @Transactional
-    public List<Lecturer> getAll() throws PersistenceException {
+    public List<Lecturer> collectAll() throws PersistenceException {
         List<Lecturer> lecturersList = null;
         try {
             lecturersList = lecturerDAO.getAll(Lecturer.class);
