@@ -26,41 +26,26 @@ public class DeleteServlet extends HttpServlet {
         String entityName = request.getParameter("entity");
         int id = Integer.parseInt(request.getParameter("id"));
         try {
-            if ("student".equals(entityName)) {
-                Student student = new Student();
-                student.setId(id);
-                student.delete();
-            }
-            if ("group".equals(entityName)) {
-                Group group = new Group();
-                group.setId(id);
-                group.delete();
-            }
-            if ("room".equals(entityName)) {
-                Room room = new Room();
-                room.setId(id);
-                room.delete();
-            }
-            if ("discipline".equals(entityName)) {
-                Discipline discipline = new Discipline();
-                discipline.setId(id);
-                discipline.delete();
-            }
-            if ("lecturer".equals(entityName)) {
-                Lecturer lecturer = new Lecturer();
-                lecturer.setId(id);
-                lecturer.delete();
-            }
-            if ("lesson".equals(entityName)){
-                Lesson lesson = new Lesson();
-                lesson.setId(id);
-                lesson.delete();
-            }
+            DomainObject domainObject = getObject(entityName);
+            domainObject.setId(id);
+            domainObject.delete();
         } catch (PersistenceException e) {
             String error = "Error: " + e.getMessage();
             request.setAttribute("error", error);
             getServletContext().getRequestDispatcher(String.format(INDEX_JSP, entityName)).forward(request, response);
         }
         response.sendRedirect(String.format(REDIRECT_ADDRESS, entityName));
+    }
+
+    private DomainObject getObject(String name) {
+        switch (name) {
+            case "student": return new Student();
+            case "group": return new Group();
+            case "room": return new Room();
+            case "discipline": return new Discipline();
+            case "lecturer": return new Lecturer();
+            case "lesson": return new Lesson();
+            default: return null;
+        }
     }
 }

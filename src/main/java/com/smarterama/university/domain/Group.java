@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Configurable(autowire = Autowire.BY_TYPE)
-public class Group implements Identified {
+public class Group implements DomainObject {
     private static Logger logger = LoggerFactory.getLogger(Group.class);
     private int id;
     private int groupNumber;

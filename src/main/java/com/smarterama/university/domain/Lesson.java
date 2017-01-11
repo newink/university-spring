@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Configurable(autowire = Autowire.BY_TYPE)
-public class Lesson implements Identified {
+public class Lesson implements DomainObject {
     private static Logger logger = LoggerFactory.getLogger(Lesson.class);
     private int id;
     private Room room;

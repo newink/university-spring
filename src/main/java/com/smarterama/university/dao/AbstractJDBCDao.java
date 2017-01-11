@@ -1,5 +1,6 @@
 package com.smarterama.university.dao;
 
+import com.smarterama.university.domain.DomainObject;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
-public abstract class AbstractJDBCDao<T extends Identified> implements GenericDAO<T> {
+public abstract class AbstractJDBCDao<T extends DomainObject> implements GenericDAO<T> {
     protected DataSource dataSource;
     private static Logger logger = LoggerFactory.getLogger(AbstractJDBCDao.class);
 

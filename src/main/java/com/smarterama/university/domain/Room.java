@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Configurable(autowire = Autowire.BY_TYPE)
-public class Room implements Identified {
+public class Room implements DomainObject {
     private static Logger logger = LoggerFactory.getLogger(Room.class);
     private int id;
     private int capacity;

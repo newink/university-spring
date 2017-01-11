@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Configurable(autowire = Autowire.BY_TYPE)
-public class Lecturer implements Identified {
+public class Lecturer implements DomainObject {
     private static Logger logger = LoggerFactory.getLogger(Lecturer.class);
     private int id;
     private String firstName;
