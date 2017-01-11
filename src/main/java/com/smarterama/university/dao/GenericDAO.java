@@ -12,7 +12,7 @@ import java.util.List;
 public class GenericDAO<T, PK extends Serializable> {
     
     @Autowired
-    private SessionFactory sessionFactory;
+    protected SessionFactory sessionFactory;
 
     public void save(T o){
         getSession().save(o);
@@ -34,7 +34,7 @@ public class GenericDAO<T, PK extends Serializable> {
         return getSession().createQuery("from " + type.getName()).getResultList();
     }
     
-    private Session getSession() {
+    protected Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 }
