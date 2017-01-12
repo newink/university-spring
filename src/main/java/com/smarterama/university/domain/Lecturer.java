@@ -41,11 +41,10 @@ public class Lecturer implements DomainObject {
     @Enumerated(EnumType.STRING)
     private Degree degree;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "lecturers_disciplines",
             joinColumns = { @JoinColumn(name = "lecturer_id") },
             inverseJoinColumns = { @JoinColumn(name = "discipline_id") })
-    @JsonManagedReference
     private List<Discipline> disciplines;
 
     @Transient

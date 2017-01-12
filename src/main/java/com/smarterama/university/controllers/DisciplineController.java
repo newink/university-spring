@@ -2,33 +2,31 @@ package com.smarterama.university.controllers;
 
 import com.smarterama.university.domain.Discipline;
 import com.smarterama.university.exceptions.PersistenceException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/discipline")
+@RequestMapping("/api")
 public class DisciplineController {
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public ResponseEntity<List<Discipline>> listDisciplines() throws PersistenceException {
-        List<Discipline> disciplineList = new Discipline().collectAll();
-        if (disciplineList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(disciplineList, HttpStatus.OK);
+    @RequestMapping(value = "/discipline", method = RequestMethod.POST)
+    public ResponseEntity<Void> createDiscipline(@RequestBody Discipline discipline, UriComponentsBuilder componentsBuilder) throws PersistenceException {
+        discipline.persist();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(componentsBuilder.path("/discipline/{id}").buildAndExpand(discipline.getId()).toUri());
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Discipline> getDisciplines(@PathVariable("id") int id) throws PersistenceException {
-        Discipline discipline = new Discipline();
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Discipline> updateDiscipline(@PathVariable("id") int id, @RequestBody Discipline discipline) throws PersistenceException {
         discipline.setId(id);
-        discipline.retrieve();
-        if (discipline == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
+        discipline.persist();
+
         return new ResponseEntity<>(discipline, HttpStatus.OK);
     }
 }

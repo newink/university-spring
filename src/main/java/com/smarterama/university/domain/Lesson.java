@@ -30,20 +30,20 @@ public class Lesson implements DomainObject {
     @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "room_id")
     @JsonManagedReference
     private Room room;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lecturer_id")
     private Lecturer lecturer;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "discipline_id")
     private Discipline discipline;
 

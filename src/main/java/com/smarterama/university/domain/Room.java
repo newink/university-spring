@@ -33,10 +33,6 @@ public class Room implements DomainObject {
     @Column
     private int roomNumber;
 
-    @OneToOne(mappedBy = "room")
-    @JsonBackReference
-    private Lesson lesson;
-
     @Transient
     @Autowired
     @JsonIgnore
