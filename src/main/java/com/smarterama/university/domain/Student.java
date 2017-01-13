@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -135,7 +137,8 @@ public class Student implements DomainObject {
         studentDAO.delete(this);
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public Student retrieve() throws PersistenceException {
         Student readStudent = studentDAO.get(Student.class, id);
         group = readStudent.getGroup();
@@ -147,7 +150,8 @@ public class Student implements DomainObject {
         return this;
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public List<Student> collectAll() throws PersistenceException {
         List<Student> studentsList = null;
         try {

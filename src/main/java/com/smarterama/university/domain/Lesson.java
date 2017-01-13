@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -30,20 +32,19 @@ public class Lesson implements DomainObject {
     @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "room_id")
-    @JsonManagedReference
     private Room room;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "lecturer_id")
     private Lecturer lecturer;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "group_id")
     private Group group;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "discipline_id")
     private Discipline discipline;
 
@@ -66,7 +67,6 @@ public class Lesson implements DomainObject {
         this.id = id;
     }
 
-    @JsonManagedReference
     public Room getRoom() {
         return room;
     }
@@ -75,7 +75,6 @@ public class Lesson implements DomainObject {
         this.room = room;
     }
 
-    @JsonManagedReference
     public Lecturer getLecturer() {
         return lecturer;
     }
@@ -84,7 +83,6 @@ public class Lesson implements DomainObject {
         this.lecturer = lecturer;
     }
 
-    @JsonManagedReference
     public Group getGroup() {
         return group;
     }
@@ -150,13 +148,15 @@ public class Lesson implements DomainObject {
         lessonDAO.delete(this);
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public Lesson retrieve() throws PersistenceException {
         Lesson readLesson = lessonDAO.get(Lesson.class, id);
         return readLesson;
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public List<Lesson> collectAll() throws PersistenceException {
         List<Lesson> lessonsList = null;
         try {

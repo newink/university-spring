@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -89,7 +91,7 @@ public class Discipline implements DomainObject {
         disciplineDAO.delete(this);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Discipline retrieve() throws PersistenceException {
         Discipline readDiscipline = disciplineDAO.get(Discipline.class, id);
         name = readDiscipline.getName();
@@ -97,7 +99,7 @@ public class Discipline implements DomainObject {
         return this;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Discipline> collectAll() throws PersistenceException {
         List<Discipline> disciplineList = null;
         try {

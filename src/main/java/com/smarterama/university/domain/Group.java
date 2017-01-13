@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -72,14 +74,16 @@ public class Group implements DomainObject {
         groupDAO.delete(this);
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public Group retrieve() throws PersistenceException {
         Group readGroup = groupDAO.get(Group.class, id);
         groupNumber = readGroup.getGroupNumber();
         return this;
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public List<Group> collectAll() throws PersistenceException {
         List<Group> groupList = null;
         try {

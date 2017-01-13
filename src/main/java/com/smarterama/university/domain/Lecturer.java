@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -41,7 +43,7 @@ public class Lecturer implements DomainObject {
     @Enumerated(EnumType.STRING)
     private Degree degree;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "lecturers_disciplines",
             joinColumns = { @JoinColumn(name = "lecturer_id") },
             inverseJoinColumns = { @JoinColumn(name = "discipline_id") })
@@ -147,7 +149,8 @@ public class Lecturer implements DomainObject {
         lecturerDAO.delete(this);
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public Lecturer retrieve() throws PersistenceException {
         Lecturer readLecturer = lecturerDAO.get(Lecturer.class, id);
         firstName = readLecturer.getFirstName();
@@ -158,7 +161,8 @@ public class Lecturer implements DomainObject {
         return this;
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public List<Lecturer> collectAll() throws PersistenceException {
         List<Lecturer> lecturersList = null;
         try {

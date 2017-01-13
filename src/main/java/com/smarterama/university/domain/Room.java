@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -88,7 +90,8 @@ public class Room implements DomainObject {
         roomDAO.delete(this);
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public Room retrieve() throws PersistenceException {
         Room readRoom = roomDAO.get(Room.class, id);
         roomNumber = readRoom.getRoomNumber();
@@ -96,7 +99,8 @@ public class Room implements DomainObject {
         return this;
     }
 
-    @Transactional
+
+    @Transactional(readOnly = true)
     public List<Room> collectAll() throws PersistenceException {
         List<Room> roomsList = null;
         try {
