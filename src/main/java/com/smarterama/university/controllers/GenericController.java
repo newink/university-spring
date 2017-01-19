@@ -5,7 +5,10 @@ import com.smarterama.university.domain.*;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,7 +23,7 @@ public class GenericController {
         if (domainObjects.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(domainObjects, HttpStatus.OK);
+        return new ResponseEntity<List<? extends DomainObject>>(domainObjects, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{type}/{id}", method = RequestMethod.GET)
@@ -46,13 +49,20 @@ public class GenericController {
 
     private DomainObject getObject(String name) {
         switch (name) {
-            case "student": return new Student();
-            case "group": return new Group();
-            case "room": return new Room();
-            case "discipline": return new Discipline();
-            case "lecturer": return new Lecturer();
-            case "lesson": return new Lesson();
-            default: return null;
+            case "student":
+                return new Student();
+            case "group":
+                return new Group();
+            case "room":
+                return new Room();
+            case "discipline":
+                return new Discipline();
+            case "lecturer":
+                return new Lecturer();
+            case "lesson":
+                return new Lesson();
+            default:
+                return null;
         }
     }
 }

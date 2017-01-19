@@ -1,16 +1,12 @@
 package com.smarterama.university.controllers;
 
 import com.smarterama.university.domain.Room;
-import com.smarterama.university.exceptions.ErrorResponse;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")

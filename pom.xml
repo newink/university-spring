@@ -5,7 +5,7 @@
   <artifactId>university</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>task11 Pages Webapp</name>
+  <name>University Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -107,9 +107,9 @@
             <artifactId>tomcat7-maven-plugin</artifactId>
             <version>2.2</version>
             <configuration>
-                <url>http://localhost:8080/</url>
-                <username>tomcat</username>
-                <password>tomcat</password>
+                <url>http://asd.ru</url>
+                <username>asd</username>
+                <password>asd</password>
                 <path>/university</path>
             </configuration>
         </plugin>
@@ -155,7 +155,7 @@
             <artifactId>aspectj-maven-plugin</artifactId>
             <version>1.9</version>
             <configuration>
-                <complianceLevel>1.8</complianceLevel>
+                <complianceLevel>1.7</complianceLevel>
                 <encoding>UTF-8</encoding>
                 <aspectLibraries>
                     <aspectLibrary>

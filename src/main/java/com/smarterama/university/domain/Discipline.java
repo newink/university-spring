@@ -1,7 +1,6 @@
 package com.smarterama.university.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
@@ -11,12 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,7 +23,9 @@ import java.util.Objects;
 public class Discipline implements DomainObject {
     private static Logger logger = LoggerFactory.getLogger(Discipline.class);
 
-    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column

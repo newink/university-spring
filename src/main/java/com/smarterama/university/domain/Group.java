@@ -9,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -25,7 +23,9 @@ public class Group implements DomainObject {
 
     private static Logger logger = LoggerFactory.getLogger(Group.class);
 
-    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column

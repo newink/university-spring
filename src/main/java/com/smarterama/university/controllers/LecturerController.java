@@ -2,7 +2,6 @@ package com.smarterama.university.controllers;
 
 import com.smarterama.university.domain.DomainObject;
 import com.smarterama.university.domain.Lecturer;
-import com.smarterama.university.domain.Lesson;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

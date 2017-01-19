@@ -1,6 +1,5 @@
 package com.smarterama.university.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
@@ -10,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -26,7 +23,9 @@ public class Room implements DomainObject {
 
     private static Logger logger = LoggerFactory.getLogger(Room.class);
 
-    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column
@@ -111,7 +110,7 @@ public class Room implements DomainObject {
         }
         return roomsList;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
