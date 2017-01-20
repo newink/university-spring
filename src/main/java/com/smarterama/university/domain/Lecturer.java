@@ -26,7 +26,7 @@ public class Lecturer implements DomainObject {
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column
@@ -42,7 +42,7 @@ public class Lecturer implements DomainObject {
     @Enumerated(EnumType.STRING)
     private Degree degree;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "lecturers_disciplines",
             joinColumns = {@JoinColumn(name = "lecturer_id")},
             inverseJoinColumns = {@JoinColumn(name = "discipline_id")})

@@ -23,7 +23,7 @@ public class GenericController {
         if (domainObjects.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(domainObjects, HttpStatus.OK);
+        return new ResponseEntity<List<? extends DomainObject>>(domainObjects, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{type}/{id}", method = RequestMethod.GET)

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
     <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAVVVVAKqqqgAiIiIAd3d3AMzMzACZmZkA7u7uABEREQAzMzMAiIiIAN3d3QAAAAAAAAAAAAAAAAAAAAAAAAeQAAAKAAAAeRAAACCgAAeRAAAAAgoACgUBAAOwmAAKBQiQoCCYAAoFCJCgIJgACgUIkKAgmAAKBQiQoCCYAAoFCJCgIJgACgUIkKAgmAAKBQiQoCCYAAoFCJCgIJgAQAUIBgAgkAJIAAIGBAAKAkgAAgYEAAoCQAAABgAAAALgDwAAx8cAAI/jAACIEwAAiRMAAIkTAACJEwAAiRMAAIkTAACJEwAAiRMAAIkTAAAIEAAAODgAADg4AAAAAAAA" rel="icon" type="image/x-icon" />
 </head>
 <div class="container">
     <div class="navbar-header">
