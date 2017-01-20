@@ -1,7 +1,6 @@
 package com.smarterama.university.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.smarterama.university.dao.GenericDAO;
 import com.smarterama.university.exceptions.PersistenceException;
 import org.hibernate.HibernateException;
@@ -10,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.data.annotation.ReadOnlyProperty;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
@@ -27,7 +24,9 @@ public class Lecturer implements DomainObject {
 
     private static Logger logger = LoggerFactory.getLogger(Lecturer.class);
 
-    @Id @Column @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column
@@ -45,8 +44,8 @@ public class Lecturer implements DomainObject {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "lecturers_disciplines",
-            joinColumns = { @JoinColumn(name = "lecturer_id") },
-            inverseJoinColumns = { @JoinColumn(name = "discipline_id") })
+            joinColumns = {@JoinColumn(name = "lecturer_id")},
+            inverseJoinColumns = {@JoinColumn(name = "discipline_id")})
     private List<Discipline> disciplines;
 
     @Transient

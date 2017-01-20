@@ -1,4 +1,5 @@
 package com.smarterama.university.domain;
+
 import com.smarterama.university.exceptions.PersistenceException;
 
 import java.util.List;
